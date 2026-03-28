@@ -8,35 +8,30 @@
         :root { --primary: #00d2ff; --bg: #0f172a; --accent: #ff4b2b; --success: #00ff88; --gold: #facc15; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; }
         .card { background: rgba(30, 41, 59, 0.95); padding: 30px; border-radius: 30px; width: 90%; max-width: 450px; border: 2px solid var(--primary); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        
         .evolution-bar { width: 100%; height: 6px; background: #1e293b; border-radius: 3px; margin: 10px 0; overflow: hidden; }
         #evolution-fill { width: 0%; height: 100%; background: var(--success); transition: 0.5s; }
         .stats-top { display: flex; justify-content: space-between; font-size: 11px; opacity: 0.8; margin-bottom: 5px; }
-
         .avatar-frame { width: 140px; height: 140px; margin: 0 auto 20px; border-radius: 50%; border: 6px solid #334155; overflow: hidden; transition: 0.3s; background: #1e293b; }
         .avatar-frame img { width: 100%; height: 100%; object-fit: cover; }
         .speaking { border-color: var(--success); box-shadow: 0 0 30px var(--success); transform: scale(1.05); }
         .listening { border-color: var(--accent); box-shadow: 0 0 30px var(--accent); animation: pulse 1s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
         .btn { border: none; padding: 18px; border-radius: 15px; width: 100%; font-weight: bold; cursor: pointer; font-size: 16px; margin: 8px 0; color: white; transition: 0.2s; }
         .btn-junior { background: #28a745; }
         .btn-tutor { background: #3a7bd5; }
         .btn-mic { background: var(--accent); font-size: 18px; box-shadow: 0 4px 15px rgba(255,75,43,0.3); }
-        
         .panel { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 20px; margin: 15px 0; min-height: 110px; display: flex; flex-direction: column; justify-content: center; border-left: 4px solid var(--primary); }
         .txt-en { color: var(--primary); font-size: 30px; font-weight: bold; margin: 0; }
         .txt-es { color: #94a3b8; font-style: italic; font-size: 15px; margin-top: 5px; }
         .txt-pron { color: #facc15; font-size: 14px; margin-top: 8px; font-weight: bold; background: rgba(250, 204, 21, 0.1); padding: 5px; border-radius: 5px; }
-        
         input { width: 80%; padding: 15px; border-radius: 12px; border: none; margin-bottom: 20px; font-size: 16px; text-align: center; background: #1e293b; color: white; border: 1px solid #334155; }
     </style></head><body><div class="card">
     <div id="screen-login">
         <h1 style="color:var(--primary); margin-bottom:5px;">Familia Caro</h1>
-        <p style="margin-top:0; opacity:0.8;">Plataforma Inteligente</p>
+        <p style="margin-top:0; opacity:0.8;">Plataforma de Aprendizaje</p>
         <input type="text" id="in-name" placeholder="Escribe tu nombre...">
-        <button class="btn btn-junior" onclick="iniciar('junior')"><i class="fas fa-child"></i> MODO JUNIOR (Para tu hija)</button>
-        <button class="btn btn-tutor" onclick="iniciar('tutor')"><i class="fas fa-chalkboard-teacher"></i> MODO TUTOR (Para Julian)</button>
+        <button class="btn btn-junior" onclick="iniciar('junior')"><i class="fas fa-child"></i> MODO JUNIOR</button>
+        <button class="btn btn-tutor" onclick="iniciar('tutor')"><i class="fas fa-chalkboard-teacher"></i> MODO TUTOR</button>
     </div>
 
     <div id="screen-app" style="display:none;">
@@ -45,71 +40,43 @@
             <span>NIVEL <b id="lbl-level" style="color:var(--gold)">1</b></span>
         </div>
         <div class="evolution-bar"><div id="evolution-fill"></div></div>
-
-        <div class="avatar-frame" id="avatar-box">
-            <img src="https://img.freepik.com/foto-gratis/mujer-negocios-sonriente-gafas_23-2148450171.jpg">
-        </div>
-        
+        <div class="avatar-frame" id="avatar-box"><img src="https://img.freepik.com/foto-gratis/mujer-negocios-sonriente-gafas_23-2148450171.jpg"></div>
         <div id="info-header" style="font-size: 12px; margin-bottom: 10px; opacity: 0.6; display:flex; justify-content:space-between;">
             <span id="lbl-user"></span>
             <span>Puntos: <b id="lbl-points" style="color:var(--success)">0</b></span>
         </div>
-
         <div class="panel">
-            <span class="txt-en" id="main-en">Cargando...</span>
+            <span class="txt-en" id="main-en">---</span>
             <span class="txt-es" id="main-es">---</span>
-            <span class="txt-pron" id="main-pron">Esperando internet...</span>
+            <span class="txt-pron" id="main-pron">---</span>
         </div>
-
         <p id="instruction" style="color: #00ff88; font-size: 14px; font-weight: bold; height: 20px;"></p>
-        
-        <button class="btn btn-mic" id="mic-btn" onclick="escuchar()">
-            <i class="fas fa-microphone"></i> TOCAR PARA HABLAR
-        </button>
-        
-        <button class="btn" style="background:#334155; font-size:11px; padding:10px;" onclick="location.reload()">CERRAR SESIÓN</button>
+        <button class="btn btn-mic" id="mic-btn" onclick="escuchar()"><i class="fas fa-microphone"></i> TOCAR PARA HABLAR</button>
+        <button class="btn" style="background:#334155; font-size:11px; padding:10px;" onclick="saltarPaso()">SALTAR / SIGUIENTE</button>
     </div></div>
 
 <script>
     const GOOGLE_URL = 'TU_URL_DE_GOOGLE_SCRIPT_AQUI'; 
-    let state = { user: "", points: 0, mode: "", level: 1, timeLeft: 600, targetActual: "" };
+    let state = { user: "", points: 0, step: 0, mode: "", level: 1, timeLeft: 600 };
 
-    // Función Inteligente: Busca palabras en la web
-    async function obtenerPalabraNueva() {
-        document.getElementById('instruction').innerText = "BUSCANDO RETO NUEVO...";
-        try {
-            // Obtenemos una palabra aleatoria (Modo Junior: Corta | Modo Tutor: Normal)
-            const longitud = (state.mode === 'junior') ? '&length=5' : '';
-            const res = await fetch(`https://random-word-api.herokuapp.com/word?lang=en${longitud}`);
-            const data = await res.json();
-            const word = data[0];
-
-            // Traducimos al español
-            const resTra = await fetch(`https://api.mymemory.translated.net/get?q=${word}&langpair=en|es`);
-            const dataTra = await resTra.json();
-            const translation = dataTra.responseData.translatedText;
-
-            state.targetActual = word.toLowerCase();
-            
-            // Actualizar Interfaz
-            document.getElementById('main-en').innerText = word.charAt(0).toUpperCase() + word.slice(1);
-            document.getElementById('main-es').innerText = "(" + translation + ")";
-            document.getElementById('main-pron').innerText = "Pronunciación dinámica: ON";
-            document.getElementById('instruction').innerText = "ESCUCHA Y REPITE";
-
-            const intro = (state.mode === 'junior') 
-                ? `La palabra es ${word}. Significa ${translation}.`
-                : `Siguiente reto: ${word}. En español es ${translation}.`;
-            
-            hablar(word, "", intro);
-        } catch (e) {
-            // Respaldo por si falla el internet
-            state.targetActual = "smile";
-            document.getElementById('main-en').innerText = "Smile";
-            document.getElementById('main-es').innerText = "(Sonreír)";
-            hablar("Smile", "", "Hubo un error de internet, pero intentemos con Smile.");
-        }
-    }
+    const db = {
+        junior: [
+            { en: "Apple", es: "Manzana", pron: "Á-pol", target: "apple" },
+            { en: "Dog", es: "Perro", pron: "Dog", target: "dog" },
+            { en: "Sun", es: "Sol", pron: "San", target: "sun" },
+            { en: "Water", es: "Agua", pron: "Uá-ter", target: "water" },
+            { en: "Milk", es: "Leche", pron: "Milk", target: "milk" },
+            { en: "House", es: "Casa", pron: "Jáus", target: "house" },
+            { en: "Colors", es: "Colores", pron: "Có-lors", target: "colors" }
+        ],
+        tutor: [
+            { en: "Hello", es: "Hola", pron: "Je-lóu", target: "hello" },
+            { en: "How are you?", es: "¿Cómo estás?", pron: "Jáu-ar-iú", target: "how are you" },
+            { en: "I am fine", es: "Estoy bien", pron: "Ai-am-fáin", target: "fine" },
+            { en: "I need coffee", es: "Necesito café", pron: "Ai-níd-có-fi", target: "coffee" },
+            { en: "Where is my phone?", es: "¿Dónde está mi celular?", pron: "Uér-is-mai-fóun", target: "phone" }
+        ]
+    };
 
     function hablar(en, es, expli, callback) {
         window.speechSynthesis.cancel();
@@ -118,17 +85,14 @@
         const msgEs = new SpeechSynthesisUtterance(expli);
         msgEs.lang = 'es-ES'; msgEs.rate = 0.9;
         document.getElementById('avatar-box').classList.add('speaking');
-        msgEs.onend = () => { window.speechSynthesis.speak(msgEn); };
-        msgEn.onend = () => {
-            document.getElementById('avatar-box').classList.remove('speaking');
-            if(callback) callback();
-        };
+        msgEs.onend = () => { if(en) window.speechSynthesis.speak(msgEn); else if(callback) callback(); };
+        msgEn.onend = () => { document.getElementById('avatar-box').classList.remove('speaking'); if(callback) callback(); };
         window.speechSynthesis.speak(msgEs);
     }
 
     function iniciar(m) {
         state.user = document.getElementById('in-name').value;
-        if(!state.user) return alert("Escribe tu nombre para empezar");
+        if(!state.user) return alert("Escribe tu nombre");
         state.mode = m;
         document.getElementById('screen-login').style.display = 'none';
         document.getElementById('screen-app').style.display = 'block';
@@ -144,56 +108,60 @@
         }, 1000);
 
         const bienvenida = (m === 'junior') 
-            ? `¡Hola pequeña! Vamos a jugar con palabras infinitas de internet.`
-            : `Hola ${state.user}, activando modo inteligencia web.`;
+            ? `¡Hola pequeña! Vamos a jugar con las palabras. ¡Mira la pantalla!`
+            : `Hola ${state.user}, soy tu tutor. Vamos a practicar inglés paso a paso. Yo te guío.`;
         
-        hablar("", "", bienvenida, obtenerPalabraNueva);
+        hablar("", "", bienvenida, mostrarPaso);
+    }
+
+    function mostrarPaso() {
+        const item = db[state.mode][state.step % db[state.mode].length];
+        document.getElementById('main-en').innerText = item.en;
+        document.getElementById('main-es').innerText = "(" + item.es + ")";
+        document.getElementById('main-pron').innerText = "Pronunciación: " + item.pron;
+        document.getElementById('instruction').innerText = "ESCUCHA Y REPITE";
+
+        const textoExplica = (state.mode === 'junior')
+            ? `La palabra es ${item.en}. Significa ${item.es}. ¡Dilo conmigo!`
+            : `Para decir ${item.es}, decimos ${item.en}. Se pronuncia ${item.pron}. Escucha:`;
+        
+        hablar(item.en, "", textoExplica);
+    }
+
+    function saltarPaso() {
+        state.step++;
+        mostrarPaso();
     }
 
     function escuchar() {
         const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if(!Recognition) return alert("Tu navegador no soporta micrófono");
-        
         const rec = new Recognition();
         rec.lang = 'en-US';
-
         rec.onstart = () => {
             document.getElementById('avatar-box').classList.add('listening');
             document.getElementById('instruction').innerText = "TE ESTOY ESCUCHANDO...";
         };
-
         rec.onresult = (e) => {
             const voz = e.results[0][0].transcript.toLowerCase();
             document.getElementById('avatar-box').classList.remove('listening');
-            
-            if(voz.includes(state.targetActual)) {
-                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#00d2ff', '#00ff88', '#facc15'] });
+            const correcta = db[state.mode][state.step % db[state.mode].length].target;
+
+            if(voz.includes(correcta)) {
+                confetti({ particleCount: 150 });
                 state.points += 10;
                 document.getElementById('lbl-points').innerText = state.points;
-                
-                let progreso = (state.points % 50) * 2;
-                document.getElementById('evolution-fill').style.width = progreso + "%";
-                if(state.points > 0 && state.points % 50 === 0) {
-                    state.level++;
-                    document.getElementById('lbl-level').innerText = state.level;
-                }
-
                 document.getElementById('instruction').innerText = "¡EXCELENTE! +10";
-                hablar("", "", "¡Impresionante! Lo dijiste perfecto.", () => {
-                    guardar(state.user, state.points);
-                    setTimeout(obtenerPalabraNueva, 1500);
+                hablar("", "", "¡Muy bien hecho! ¡Puntos para ti!", () => {
+                    state.step++;
+                    setTimeout(mostrarPaso, 1500);
                 });
             } else {
                 document.getElementById('instruction').innerText = "INTENTA OTRA VEZ";
-                hablar("", "", `Escuché ${voz}. Inténtalo de nuevo.`, () => {
-                    setTimeout(() => hablar(state.targetActual, "", ""), 500);
+                hablar("", "", `Escuché ${voz}. No te preocupes, inténtalo de nuevo. Escucha otra vez:`, () => {
+                    setTimeout(() => hablar(db[state.mode][state.step % db[state.mode].length].en, "", ""), 500);
                 });
             }
         };
-        rec.onend = () => document.getElementById('avatar-box').classList.remove('listening');
         rec.start();
     }
-
-    function guardar(n, p) {
-        fetch(GOOGLE_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({nombre:n, puntos:p}) });
-    }</script></body></html>
+</script></body></html>
