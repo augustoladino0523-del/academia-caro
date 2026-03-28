@@ -1,37 +1,35 @@
 <!DOCTYPE html><html lang="es"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Familia Caro - Academia Pro</title>
+    <title>Familia Caro - Academia Pro v6.0</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root { --primary: #00d2ff; --bg: #0f172a; --accent: #ff4b2b; --success: #00ff88; --gold: #facc15; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; }
-        .card { background: rgba(30, 41, 59, 0.95); padding: 35px; border-radius: 40px; width: 95%; max-width: 500px; border: 3px solid var(--primary); box-shadow: 0 15px 50px rgba(0,0,0,0.8); }
-        .avatar-frame { width: 130px; height: 130px; margin: 0 auto 20px; border-radius: 50%; border: 6px solid #334155; overflow: hidden; background: #1e293b; box-shadow: 0 0 20px var(--primary); transition: 0.3s; }
+        .card { background: rgba(30, 41, 59, 0.95); padding: 30px; border-radius: 40px; width: 95%; max-width: 500px; border: 3px solid var(--primary); box-shadow: 0 15px 50px rgba(0,0,0,0.8); }
+        .avatar-frame { width: 120px; height: 120px; margin: 0 auto 15px; border-radius: 50%; border: 6px solid #334155; overflow: hidden; background: #1e293b; box-shadow: 0 0 20px var(--primary); transition: 0.3s; }
         .speaking { border-color: var(--success); transform: scale(1.05); box-shadow: 0 0 30px var(--success); }
         .avatar-frame img { width: 100%; height: 100%; object-fit: cover; }
-        .btn { border: none; padding: 22px; border-radius: 20px; width: 100%; font-weight: bold; cursor: pointer; font-size: 16px; margin: 10px 0; color: white; transition: 0.3s; text-transform: uppercase; }
+        .btn { border: none; padding: 18px; border-radius: 20px; width: 100%; font-weight: bold; cursor: pointer; font-size: 16px; margin: 8px 0; color: white; transition: 0.3s; text-transform: uppercase; }
         .btn-junior { background: linear-gradient(45deg, #28a745, #85e085); }
         .btn-tutor { background: linear-gradient(45deg, #3a7bd5, #00d2ff); }
         .btn-pro { background: linear-gradient(45deg, #6a11cb, #2575fc); border: 2px solid white; }
         .btn-mic { background: linear-gradient(45deg, #ff4b2b, #ff416c); font-size: 20px; }
-        .panel { background: rgba(0,0,0,0.5); padding: 25px; border-radius: 25px; margin: 20px 0; min-height: 130px; border-left: 6px solid var(--success); display: flex; flex-direction: column; justify-content: center; }
+        .panel { background: rgba(0,0,0,0.5); padding: 25px; border-radius: 25px; margin: 15px 0; min-height: 120px; border-left: 6px solid var(--success); display: flex; flex-direction: column; justify-content: center; }
         .txt-en { color: var(--primary); font-size: 26px; font-weight: 900; }
         .txt-es { color: #94a3b8; font-size: 17px; margin-top: 8px; font-style: italic; }
-        input { width: 90%; padding: 18px; border-radius: 15px; border: 2px solid var(--primary); margin-bottom: 25px; font-size: 20px; text-align: center; background: #1e293b; color: white; outline: none; }
-        .stat-badge { background: #1e293b; padding: 8px 15px; border-radius: 10px; font-size: 14px; border: 1px solid #334155; }
+        input { width: 85%; padding: 15px; border-radius: 15px; border: 2px solid var(--primary); margin-bottom: 20px; font-size: 18px; text-align: center; background: #1e293b; color: white; outline: none; }
+        .stat-badge { background: #1e293b; padding: 6px 12px; border-radius: 10px; font-size: 13px; border: 1px solid #334155; }
     </style></head><body><div class="card">
-    
     <div id="screen-login">
-        <h1 style="color:var(--primary); font-size: 40px; margin-bottom: 10px;">FAMILIA CARO</h1>
-        <p style="margin-bottom:20px; font-size: 18px;">Inglés Inteligente y Fluido</p>
+        <h1 style="color:var(--primary); font-size: 35px; margin-bottom: 5px;">FAMILIA CARO</h1>
+        <p style="margin-bottom:20px; font-size: 16px;">Inglés Sin Límites</p>
         <input type="text" id="in-name" placeholder="Escribe tu nombre...">
-        <button class="btn btn-junior" onclick="iniciar('junior')">MODO JUNIOR (Objetos)</button>
-        <button class="btn btn-tutor" onclick="iniciar('tutor')">MODO TUTOR (Acciones)</button>
+        <button class="btn btn-junior" onclick="iniciar('junior')">MODO JUNIOR (Palabras)</button>
+        <button class="btn btn-tutor" onclick="iniciar('tutor')">MODO TUTOR (Frases)</button>
         <button class="btn btn-pro" onclick="iniciar('pro')">MODO CONVERSACIÓN PRO</button>
     </div>
-
     <div id="screen-app" style="display:none;">
         <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
             <span class="stat-badge">👤 <b id="lbl-user"></b></span>
@@ -46,42 +44,50 @@
         <button class="btn btn-mic" onclick="escuchar()"><i class="fas fa-microphone"></i> TOCAR Y HABLAR</button>
         <button class="btn" style="background:#475569; font-size:11px;" onclick="saltarPaso()">SIGUIENTE PREGUNTA</button>
     </div></div>
-
 <script>
     let state = { user: "", points: 0, mode: "", actual: {}, history: [] };
-
     const ingredients = {
         actions: [
             {en: "I want the", m: "Quiero el", f: "Quiero la"}, {en: "I see the", m: "Veo el", f: "Veo la"},
             {en: "Give me the", m: "Dame el", f: "Dame la"}, {en: "Look at the", m: "Mira el", f: "Mira la"},
-            {en: "I like the", m: "Me gusta el", f: "Me gusta la"}, {en: "Bring me the", m: "Trae el", f: "Trae la"}
+            {en: "Where is the", m: "¿Dónde está el", f: "¿Dónde está la"}, {en: "I like the", m: "Me gusta el", f: "Me gusta la"},
+            {en: "I need the", m: "Necesito el", f: "Necesito la"}, {en: "Bring me the", m: "Trae el", f: "Trae la"},
+            {en: "Open the", m: "Abre el", f: "Abre la"}, {en: "Close the", m: "Cierra el", f: "Cierra la"}
         ],
         objects: [
-            {en: "backpack", es: "morral", g: "m"}, {en: "shirt", es: "camisa", g: "f"}, {en: "apple", es: "manzana", g: "f"},
-            {en: "door", es: "puerta", g: "f"}, {en: "dog", es: "perro", g: "m"}, {en: "book", es: "libro", g: "m"},
-            {en: "bed", es: "cama", g: "f"}, {en: "key", es: "llave", g: "f"}, {en: "phone", es: "teléfono", g: "m"}
+            {en: "backpack", es: "morral", g: "m"}, {en: "shoes", es: "zapatos", g: "m"}, {en: "shirt", es: "camisa", g: "f"},
+            {en: "milk", es: "leche", g: "f"}, {en: "bread", es: "pan", g: "m"}, {en: "apple", es: "manzana", g: "f"},
+            {en: "door", es: "puerta", g: "f"}, {en: "window", es: "ventana", g: "f"}, {en: "water", es: "agua", g: "f"},
+            {en: "cat", es: "gato", g: "m"}, {en: "dog", es: "perro", g: "m"}, {en: "pencil", es: "lápiz", g: "m"},
+            {en: "book", es: "libro", g: "m"}, {en: "car", es: "carro", g: "m"}, {en: "ball", es: "pelota", g: "f"},
+            {en: "spoon", es: "cuchara", g: "f"}, {en: "plate", es: "plato", g: "m"}, {en: "bed", es: "cama", g: "f"},
+            {en: "table", es: "mesa", g: "f"}, {en: "chair", es: "silla", g: "f"}, {en: "key", es: "llave", g: "f"},
+            {en: "phone", es: "teléfono", g: "m"}, {en: "soap", es: "jabón", g: "m"}, {en: "towel", es: "toalla", g: "f"},
+            {en: "banana", es: "banano", g: "m"}, {en: "orange", es: "naranja", g: "f"}, {en: "cookie", es: "galleta", g: "f"},
+            {en: "chicken", es: "pollo", g: "m"}, {en: "egg", es: "huevo", g: "m"}, {en: "flower", es: "flor", g: "f"},
+            {en: "tree", es: "árbol", g: "m"}, {en: "toy", es: "juguete", g: "m"}, {en: "garden", es: "jardín", g: "m"},
+            {en: "kitchen", es: "cocina", g: "f"}, {en: "bathroom", es: "baño", g: "m"}, {en: "fridge", es: "nevera", g: "f"},
+            {en: "fork", es: "tenedor", g: "m"}, {en: "cup", es: "pocillo", g: "m"}, {en: "juice", es: "jugo", g: "m"},
+            {en: "pizza", es: "pizza", g: "f"}, {en: "rice", es: "arroz", g: "m"}, {en: "hat", es: "sombrero", g: "m"},
+            {en: "socks", es: "medias", g: "f"}, {en: "jacket", es: "chaqueta", g: "f"}, {en: "umbrella", es: "sombrilla", g: "f"},
+            {en: "bike", es: "bici", g: "f"}
         ],
         conversations: [
-            {q_es: "¿Cómo te llamas?", q_en: "What is your name?", r_es: "Mi nombre es", r_en: "My name is", target: "my name is"},
-            {q_es: "¿Cómo estás?", q_en: "How are you?", r_es: "Estoy muy bien", r_en: "I am very well", target: "i am very well"},
-            {q_es: "¿De dónde eres?", q_en: "Where are you from?", r_es: "Soy de Colombia", r_en: "I am from Colombia", target: "i am from colombia"},
+            {q_es: "¿Cómo te llamas?", q_en: "What is your name?", r_es: "Mi nombre es Julian", r_en: "My name is Julian", target: "my name is"},
+            {q_es: "¿Cómo estás?", q_en: "How are you?", r_es: "Estoy muy bien", r_en: "I am very well", target: "i am"},
+            {q_es: "¿De dónde eres?", q_en: "Where are you from?", r_es: "Soy de Colombia", r_en: "I am from Colombia", target: "i am from"},
             {q_es: "¿Qué edad tienes?", q_en: "How old are you?", r_es: "Tengo diez años", r_en: "I am ten years old", target: "i am"},
-            {q_es: "¿Cuál es tu comida favorita?", q_en: "What is your favorite food?", r_es: "Mi comida favorita es el pollo", r_en: "My favorite food is chicken", target: "my favorite food is"}
+            {q_es: "¿Cuál es tu comida favorita?", q_en: "What is your favorite food?", r_es: "Mi comida favorita es el pollo", r_en: "My favorite food is chicken", target: "favorite food is"}
         ]
     };
-
     function hablar(texto, lang, callback) {
         window.speechSynthesis.cancel();
         const msg = new SpeechSynthesisUtterance(texto);
         msg.lang = lang; msg.rate = 0.85;
         document.getElementById('avatar-box').classList.add('speaking');
-        msg.onend = () => { 
-            document.getElementById('avatar-box').classList.remove('speaking');
-            if(callback) callback(); 
-        };
+        msg.onend = () => { document.getElementById('avatar-box').classList.remove('speaking'); if(callback) callback(); };
         window.speechSynthesis.speak(msg);
     }
-
     function iniciar(m) {
         state.user = document.getElementById('in-name').value || "Familia Caro";
         state.mode = m;
@@ -90,23 +96,24 @@
         document.getElementById('lbl-user').innerText = state.user.toUpperCase();
         hablar(`¡Hola ${state.user}! Vamos a practicar.`, "es-ES", saltarPaso);
     }
-
     function saltarPaso() {
         document.getElementById('feedback').innerText = "";
         let en, es, target;
-
         if (state.mode === 'pro') {
             const conv = ingredients.conversations[Math.floor(Math.random() * ingredients.conversations.length)];
             en = conv.r_en; es = conv.r_es; target = conv.target;
             document.getElementById('main-en').innerText = conv.q_en.toUpperCase();
             document.getElementById('main-es').innerText = "(" + conv.q_es + ")";
-
             hablar(`${state.user}, te pregunto: ${conv.q_es}. Responde: ${conv.r_es}. En inglés es: ${conv.r_en}`, "es-ES");
         } else {
-            const obj = ingredients.objects[Math.floor(Math.random() * ingredients.objects.length)];
-            if (state.mode === 'junior') {
-                en = obj.en; es = obj.es;
-            } else {
+            let randomIdx;
+            do { randomIdx = Math.floor(Math.random() * ingredients.objects.length); 
+            } while (state.history.includes(randomIdx) && state.history.length < 35);
+            state.history.push(randomIdx);
+            if(state.history.length > 40) state.history.shift();
+            const obj = ingredients.objects[randomIdx];
+            if (state.mode === 'junior') { en = obj.en; es = obj.es; } 
+            else {
                 const act = ingredients.actions[Math.floor(Math.random() * ingredients.actions.length)];
                 en = `${act.en} ${obj.en}`;
                 es = `${obj.g === 'm' ? act.m : act.f} ${obj.es}`;
@@ -114,28 +121,23 @@
             target = en.toLowerCase();
             document.getElementById('main-en').innerText = en.toUpperCase();
             document.getElementById('main-es').innerText = "(" + es + ")";
-            hablar(`${state.user}, ¿cómo dirías en inglés: ${es}?`, "es-ES");
+            hablar(`${state.user}, ¿cómo dirías: ${es}?`, "es-ES");
         }
         state.actual = { en, es, target };
     }
-
     function escuchar() {
         const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const rec = new Recognition(); rec.lang = 'en-US';
         rec.onstart = () => document.getElementById('feedback').innerText = "🎤 Te escucho...";
-        
         rec.onresult = (e) => {
             const voz = e.results[0][0].transcript.toLowerCase();
-            const esCorrecto = voz.includes(state.actual.target);
-
-            if(esCorrecto) {
+            if(voz.includes(state.actual.target)) {
                 confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
                 state.points += 100;
                 document.getElementById('lbl-points').innerText = state.points;
                 document.getElementById('feedback').innerText = "¡ASÍ SE HACE! Escuché: " + voz;
-                hablar(`¡Excelente ${state.user}!`, "es-ES", () => setTimeout(saltarPaso, 1500));
+                hablar(`¡Perfecto ${state.user}!`, "es-ES", () => setTimeout(saltarPaso, 1500));
             } else {
-                // AQUÍ ESTÁ LA CORRECCIÓN QUE PEDISTE
                 document.getElementById('feedback').innerText = `Dijiste: "${voz}"`;
                 hablar(`Te escuché decir "${voz}", pero se dice: ${state.actual.en}. Intenta de nuevo.`, "es-ES", () => {
                     setTimeout(() => hablar(state.actual.en, "en-US"), 500);
