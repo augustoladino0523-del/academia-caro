@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="es"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Familia Caro Academy</title>
+    <title>Familia Caro Academy - Infinito</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -21,14 +21,14 @@
         .btn-tutor { background: #3a7bd5; }
         .btn-mic { background: var(--accent); font-size: 18px; box-shadow: 0 4px 15px rgba(255,75,43,0.3); }
         .panel { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 20px; margin: 15px 0; min-height: 110px; display: flex; flex-direction: column; justify-content: center; border-left: 4px solid var(--primary); }
-        .txt-en { color: var(--primary); font-size: 28px; font-weight: bold; margin: 0; }
+        .txt-en { color: var(--primary); font-size: 24px; font-weight: bold; margin: 0; }
         .txt-es { color: #94a3b8; font-style: italic; font-size: 15px; margin-top: 5px; }
         .txt-pron { color: #facc15; font-size: 14px; margin-top: 8px; font-weight: bold; background: rgba(250, 204, 21, 0.1); padding: 5px; border-radius: 5px; }
         input { width: 80%; padding: 15px; border-radius: 12px; border: none; margin-bottom: 20px; font-size: 16px; text-align: center; background: #1e293b; color: white; border: 1px solid #334155; }
     </style></head><body><div class="card">
     <div id="screen-login">
         <h1 style="color:var(--primary); margin-bottom:5px;">Familia Caro</h1>
-        <p style="margin-top:0; opacity:0.8;">Aprendizaje Útil</p>
+        <p style="margin-top:0; opacity:0.8;">Inglés para el mundo real</p>
         <input type="text" id="in-name" placeholder="Escribe tu nombre...">
         <button class="btn btn-junior" onclick="iniciar('junior')">MODO JUNIOR</button>
         <button class="btn btn-tutor" onclick="iniciar('tutor')">MODO TUTOR</button>
@@ -56,27 +56,45 @@
     </div></div>
 
 <script>
-    const GOOGLE_URL = 'TU_URL_DE_GOOGLE_SCRIPT_AQUI'; 
-    let state = { user: "", points: 0, mode: "", level: 1, timeLeft: 600, actual: {} };
+    let state = { user: "", points: 0, mode: "", level: 1, timeLeft: 600, actual: {}, index: 0 };
 
-    // DICCIONARIO INFINITO DE PALABRAS ÚTILES (Sin cosas raras)
-    const bancoUtil = {
+    // BANCO DE DATOS MASIVO - OBJETOS Y PREGUNTAS COTIDIANAS
+    const db = {
         junior: [
-            {en:"Apple", es:"Manzana"}, {en:"Sun", es:"Sol"}, {en:"Milk", es:"Leche"}, {en:"Star", es:"Estrella"},
-            {en:"Dog", es:"Perro"}, {en:"Cat", es:"Gato"}, {en:"House", es:"Casa"}, {en:"Book", es:"Libro"},
-            {en:"Red", es:"Rojo"}, {en:"Blue", es:"Azul"}, {en:"Happy", es:"Feliz"}, {en:"Jump", es:"Saltar"}
+            // Objetos de casa
+            {en:"Television", es:"Televisión"}, {en:"Refrigerator", es:"Nevera"}, {en:"Mirror", es:"Espejo"}, {en:"Soap", es:"Jabón"},
+            {en:"Toothbrush", es:"Cepillo de dientes"}, {en:"Spoon", es:"Cuchara"}, {en:"Blanket", es:"Manta"}, {en:"Window", es:"Ventana"},
+            // Animales y Naturaleza
+            {en:"Elephant", es:"Elefante"}, {en:"Butterfly", es:"Mariposa"}, {en:"Rabbit", es:"Conejo"}, {en:"Rainbow", es:"Arcoíris"},
+            {en:"Cloud", es:"Nube"}, {en:"Ocean", es:"Océano"}, {en:"Forest", es:"Bosque"}, {en:"Mountain", es:"Montaña"},
+            // Ropa y Cuerpo
+            {en:"Glasses", es:"Gafas"}, {en:"Shirt", es:"Camisa"}, {en:"Pants", es:"Pantalones"}, {en:"Finger", es:"Dedo"},
+            {en:"Shoulders", es:"Hombros"}, {en:"Elbow", es:"Codo"}, {en:"Sneakers", es:"Tenis"}, {en:"Gloves", es:"Guantes"},
+            // Comida
+            {en:"Strawberry", es:"Fresa"}, {en:"Cheese", es:"Queso"}, {en:"Chicken", es:"Pollo"}, {en:"Juice", es:"Jugo"},
+            {en:"Banana", es:"Banano"}, {en:"Carrot", es:"Zanahoria"}, {en:"Ice cream", es:"Helado"}, {en:"Watermelon", es:"Sandía"}
         ],
         tutor: [
-            {en:"Hello friend", es:"Hola amigo"}, {en:"I am hungry", es:"Tengo hambre"}, {en:"Where is it?", es:"¿Dónde está?"},
-            {en:"Good morning", es:"Buen día"}, {en:"I like music", es:"Me gusta la música"}, {en:"See you later", es:"Hasta luego"},
-            {en:"How much is this?", es:"¿Cuánto cuesta?"}, {en:"Can you help me?", es:"¿Puedes ayudarme?"}
+            // Preguntas diarias
+            {en:"Where are my keys?", es:"¿Dónde están mis llaves?"}, {en:"Turn off the lights", es:"Apaga las luces"},
+            {en:"Pass me the remote", es:"Pásame el control remoto"}, {en:"Dinner is ready", es:"La cena está lista"},
+            {en:"I am going to sleep", es:"Me voy a dormir"}, {en:"Wake up sweetie", es:"Despierta cariño"},
+            {en:"Did you wash your hands?", es:"¿Te lavaste las manos?"}, {en:"I love this movie", es:"Me encanta esta película"},
+            // Interacción social
+            {en:"How was your day?", es:"¿Cómo estuvo tu día?"}, {en:"I am very proud of you", es:"Estoy muy orgulloso de ti"},
+            {en:"Don't worry about it", es:"No te preocupes por eso"}, {en:"Can you repeat that?", es:"¿Puedes repetir eso?"},
+            {en:"Let's go to the park", es:"Vamos al parque"}, {en:"Give me a hug", es:"Dame un abrazo"},
+            // Necesidades y Trabajo
+            {en:"I have a lot of work", es:"Tengo mucho trabajo"}, {en:"The internet is slow", es:"El internet está lento"},
+            {en:"Charge my phone please", es:"Carga mi celular por favor"}, {en:"I need an umbrella", es:"Necesito una sombrilla"},
+            {en:"It is raining outside", es:"Está lloviendo afuera"}, {en:"I am thirsty", es:"Tengo sed"}
         ]
     };
 
     function hablar(en, es, expli, callback) {
         window.speechSynthesis.cancel();
         const msgEn = new SpeechSynthesisUtterance(en);
-        msgEn.lang = 'en-US'; msgEn.rate = 0.7; 
+        msgEn.lang = 'en-US'; msgEn.rate = 0.75; 
         const msgEs = new SpeechSynthesisUtterance(expli);
         msgEs.lang = 'es-ES'; msgEs.rate = 0.9;
         document.getElementById('avatar-box').classList.add('speaking');
@@ -89,6 +107,8 @@
         state.user = document.getElementById('in-name').value;
         if(!state.user) return alert("Escribe tu nombre");
         state.mode = m;
+        // Mezcla la lista para que el orden sea infinito
+        db[m].sort(() => Math.random() - 0.5);
         document.getElementById('screen-login').style.display = 'none';
         document.getElementById('screen-app').style.display = 'block';
         document.getElementById('lbl-user').innerText = "👤 " + state.user;
@@ -102,28 +122,24 @@
             }
         }, 1000);
 
-        hablar("", "", `Hola ${state.user}, modo ${m} activado. ¡Vamos a darle!`, saltarPaso);
+        hablar("", "", `¡Hola ${state.user}! Vamos a aprender cosas de la casa y la vida real.`, saltarPaso);
     }
 
     function saltarPaso() {
-        // Elige una palabra al azar de la lista SEGURA
-        const lista = bancoUtil[state.mode];
-        const elegido = lista[Math.floor(Math.random() * lista.length)];
+        const lista = db[state.mode];
+        const elegido = lista[state.index % lista.length];
+        state.index++; // Avanza cíclicamente pero en orden mezclado
         
-        state.actual = {
-            en: elegido.en,
-            es: elegido.es,
-            target: elegido.en.toLowerCase()
-        };
+        state.actual = { en: elegido.en, es: elegido.es, target: elegido.en.toLowerCase() };
 
         document.getElementById('main-en').innerText = state.actual.en;
         document.getElementById('main-es').innerText = "(" + state.actual.es + ")";
-        document.getElementById('main-pron').innerText = "Escucha y repite";
-        document.getElementById('instruction').innerText = "LISTO PARA ESCUCHAR";
+        document.getElementById('main-pron').innerText = "Voz activa";
+        document.getElementById('instruction').innerText = "TE ESCUCHO...";
 
         const texto = (state.mode === 'junior')
-            ? `La palabra es ${state.actual.en}. Significa ${state.actual.es}. ¡Dila ya!`
-            : `Para decir ${state.actual.es}, en inglés usamos ${state.actual.en}. Repite después de mí:`;
+            ? `Dí ${state.actual.en}. Que es ${state.actual.es}.`
+            : `En el día a día decimos: ${state.actual.es}. En inglés es: ${state.actual.en}. Repítelo:`;
         
         hablar(state.actual.en, "", texto);
     }
@@ -134,27 +150,29 @@
         rec.lang = 'en-US';
         rec.onstart = () => {
             document.getElementById('avatar-box').classList.add('listening');
-            document.getElementById('instruction').innerText = "TE ESCUCHO...";
         };
         rec.onresult = (e) => {
             const voz = e.results[0][0].transcript.toLowerCase();
             document.getElementById('avatar-box').classList.remove('listening');
             
-            if(voz.includes(state.actual.target)) {
+            // Compara la última palabra para facilitar el acierto en frases largas
+            const palabrasTarget = state.actual.target.split(' ');
+            const ultimaPalabra = palabrasTarget[palabrasTarget.length - 1];
+
+            if(voz.includes(ultimaPalabra) || voz.includes(state.actual.target)) {
                 confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
                 state.points += 10;
                 document.getElementById('lbl-points').innerText = state.points;
-                let progreso = (state.points % 50) * 2;
-                document.getElementById('evolution-fill').style.width = progreso + "%";
-                if(state.points % 50 === 0) { state.level++; document.getElementById('lbl-level').innerText = state.level; }
+                document.getElementById('evolution-fill').style.width = (state.points % 100) + "%";
+                if(state.points % 100 === 0) { state.level++; document.getElementById('lbl-level').innerText = state.level; }
 
-                document.getElementById('instruction').innerText = "¡EXCELENTE! +10";
-                hablar("", "", "¡Muy bien! ¡Puntos para la Familia Caro!", () => {
+                document.getElementById('instruction').innerText = "¡EXCELENTE!";
+                hablar("", "", "¡Muy bien! ¡Puntos para ti!", () => {
                     setTimeout(saltarPaso, 1500);
                 });
             } else {
                 document.getElementById('instruction').innerText = "INTENTA OTRA VEZ";
-                hablar("", "", `Escuché algo como ${voz}. No te rindas, intenta de nuevo:`, () => {
+                hablar("", "", `Casi, escuché ${voz}. Intenta de nuevo:`, () => {
                     setTimeout(() => hablar(state.actual.en, "", ""), 500);
                 });
             }
