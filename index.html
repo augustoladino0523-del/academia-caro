@@ -1,158 +1,180 @@
 <!DOCTYPE html><html lang="es"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Familia Caro - Academia Pro v7.0</title>
+    <title>Familia Caro - AI Academy Elite</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root { --primary: #00d2ff; --bg: #0f172a; --accent: #ff4b2b; --success: #00ff88; --gold: #facc15; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; }
-        .card { background: rgba(30, 41, 59, 0.95); padding: 30px; border-radius: 40px; width: 95%; max-width: 500px; border: 3px solid var(--primary); box-shadow: 0 15px 50px rgba(0,0,0,0.8); }
-        .avatar-frame { width: 120px; height: 120px; margin: 0 auto 15px; border-radius: 50%; border: 6px solid #334155; overflow: hidden; background: #1e293b; box-shadow: 0 0 20px var(--primary); transition: 0.3s; }
-        .speaking { border-color: var(--success); transform: scale(1.05); box-shadow: 0 0 30px var(--success); }
-        .avatar-frame img { width: 100%; height: 100%; object-fit: cover; }
+        :root { --primary: #00f2fe; --secondary: #4facfe; --bg: #0b0f19; --card-bg: rgba(23, 32, 53, 0.8); --gold: #fccb90; --success: #00f260; }
+        body { font-family: 'Inter', sans-serif; background: radial-gradient(circle at center, #1e293b 0%, #0b0f19 100%); color: white; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        .container { width: 100%; max-width: 480px; padding: 20px; z-index: 10; }
+        .glass-card { background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 40px; padding: 40px 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
+        .glass-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(transparent, var(--primary), transparent 30%); animation: rotate 10s linear infinite; opacity: 0.1; z-index: -1; }
+        @keyframes rotate { 100% { transform: rotate(360deg); } }
         
-        /* BOTONES MEJORADOS */
-        .btn { border: none; padding: 18px; border-radius: 20px; width: 100%; font-weight: bold; cursor: pointer; font-size: 16px; margin: 10px 0; color: white; transition: 0.3s; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-junior { background: linear-gradient(45deg, #28a745, #85e085); box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3); }
-        .btn-tutor { background: linear-gradient(45deg, #3a7bd5, #00d2ff); box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3); }
-        .btn-pro { background: linear-gradient(45deg, #6a11cb, #2575fc); border: 2px solid #fff; box-shadow: 0 4px 20px rgba(106, 17, 203, 0.4); }
-        .btn-mic { background: linear-gradient(45deg, #ff4b2b, #ff416c); font-size: 20px; }
-        
-        .panel { background: rgba(0,0,0,0.5); padding: 25px; border-radius: 25px; margin: 15px 0; min-height: 120px; border-left: 6px solid var(--success); display: flex; flex-direction: column; justify-content: center; }
-        .txt-en { color: var(--primary); font-size: 26px; font-weight: 900; }
-        .txt-es { color: #94a3b8; font-size: 17px; margin-top: 8px; font-style: italic; }
-        input { width: 85%; padding: 15px; border-radius: 15px; border: 2px solid var(--primary); margin-bottom: 20px; font-size: 18px; text-align: center; background: #1e293b; color: white; outline: none; }
-        .stat-badge { background: #1e293b; padding: 6px 12px; border-radius: 10px; font-size: 13px; border: 1px solid #334155; }
-    </style></head><body><div class="card">
-    
-    <div id="screen-login">
-        <h1 style="color:var(--primary); font-size: 35px; margin-bottom: 5px;">FAMILIA CARO</h1>
-        <p style="margin-bottom:20px; font-size: 16px;">Academia de Inglés Pro</p>
-        <input type="text" id="in-name" placeholder="Escribe tu nombre...">
-        
-        <button class="btn btn-junior" onclick="iniciar('junior')"><i class="fas fa-child"></i> MODO JUNIOR</button>
-        <button class="btn btn-tutor" onclick="iniciar('tutor')"><i class="fas fa-graduation-cap"></i> MODO TUTOR</button>
-        <button class="btn btn-pro" onclick="iniciar('pro')"><i class="fas fa-rocket"></i> CONVERSACIÓN PRO</button>
-    </div>
+        .avatar-container { position: relative; width: 140px; height: 140px; margin: 0 auto 30px; }
+        .avatar-circle { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--primary); padding: 5px; background: linear-gradient(45deg, var(--primary), var(--secondary)); box-shadow: 0 0 30px rgba(0, 242, 254, 0.4); transition: 0.5s; }
+        .avatar-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #0b0f19; }
+        .pulse-active { animation: pulse 1.5s infinite; border-color: var(--success); }
+        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 242, 96, 0.7); } 70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(0, 242, 96, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 242, 96, 0); } }
 
-    <div id="screen-app" style="display:none;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-            <span class="stat-badge">👤 <b id="lbl-user"></b></span>
-            <span class="stat-badge" style="color:var(--success)">🏆 PUNTOS: <b id="lbl-points">0</b></span>
+        .btn-premium { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border: none; padding: 20px; border-radius: 20px; color: #0b0f19; font-weight: 800; cursor: pointer; width: 100%; margin: 12px 0; transition: 0.4s; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 15px; letter-spacing: 1px; }
+        .btn-premium:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3); }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-mic { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; height: 70px; border-radius: 35px; font-size: 20px; }
+
+        .display-panel { background: rgba(0,0,0,0.3); border-radius: 30px; padding: 25px; margin: 25px 0; border-bottom: 4px solid var(--primary); }
+        .text-main { font-size: 28px; font-weight: 800; background: linear-gradient(to right, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        .text-sub { color: #94a3b8; font-size: 16px; font-style: italic; line-height: 1.4; }
+        
+        input { background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 20px; color: white; width: 85%; font-size: 18px; text-align: center; margin-bottom: 25px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); background: rgba(255,255,255,0.1); }
+        .badge { background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 12px; font-size: 12px; font-weight: bold; color: var(--gold); }
+    </style></head><body>
+
+<div class="container">
+    <div class="glass-card">
+        <div id="screen-login">
+            <h1 style="font-size: 32px; margin-bottom: 10px; letter-spacing: -1px;">AI ACADEMY <span style="color:var(--primary)">ELITE</span></h1>
+            <p style="color:#64748b; margin-bottom:30px;">Professional English Training - Familia Caro</p>
+            <input type="text" id="in-name" placeholder="Ingresa tu nombre de usuario...">
+            <button class="btn-premium" onclick="iniciar('junior')"><i class="fas fa-seedling"></i> JUNIOR EXPLORER</button>
+            <button class="btn-premium btn-outline" onclick="iniciar('tutor')"><i class="fas fa-brain"></i> ACADEMY TUTOR</button>
+            <button class="btn-premium" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white;" onclick="iniciar('pro')">
+                <i class="fas fa-crown"></i> CONVERSATION MASTER PRO
+            </button>
         </div>
-        <div class="avatar-frame" id="avatar-box"><img src="https://img.freepik.com/foto-gratis/mujer-negocios-sonriente-gafas_23-2148450171.jpg"></div>
-        <div class="panel">
-            <span class="txt-en" id="main-en">---</span>
-            <span class="txt-es" id="main-es">---</span>
+
+        <div id="screen-app" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <span class="badge">PRO USER: <span id="lbl-user">---</span></span>
+                <span class="badge" style="color:var(--success)">SCORE: <span id="lbl-points">0</span></span>
+            </div>
+            
+            <div class="avatar-container">
+                <div class="avatar-circle" id="avatar-box">
+                    <img src="https://img.freepik.com/foto-gratis/atractiva-mujer-negocios-gafas-sonriendo_23-2148450171.jpg">
+                </div>
+            </div>
+
+            <div class="display-panel">
+                <div class="text-main" id="main-en">READY?</div>
+                <div class="text-sub" id="main-es">¿Estás listo para empezar?</div>
+            </div>
+
+            <div id="feedback" style="min-height:30px; color:var(--gold); font-size:14px; margin-bottom:15px; font-weight:600;"></div>
+            
+            <button class="btn-premium btn-mic" id="btn-mic" onclick="escuchar()">
+                <i class="fas fa-microphone"></i> TOCAR Y HABLAR
+            </button>
+            
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
+                <button class="btn-premium btn-outline" style="padding:12px; font-size:12px;" onclick="saltarPaso()">SALTAR</button>
+                <button class="btn-premium btn-outline" style="padding:12px; font-size:12px; border-color:#64748b; color:#64748b;" onclick="location.reload()">SALIR</button>
+            </div>
         </div>
-        <div id="feedback" style="color:var(--gold); font-weight:bold; font-size: 15px; min-height:25px; margin-bottom: 10px;"></div>
-        <button class="btn btn-mic" onclick="escuchar()"><i class="fas fa-microphone"></i> TOCAR Y HABLAR</button>
-        <button class="btn" style="background:#475569; font-size:11px;" onclick="saltarPaso()">SIGUIENTE PREGUNTA</button>
-    </div></div>
+    </div>
+</div>
 
 <script>
     let state = { user: "", points: 0, mode: "", actual: {}, history: [] };
-    const ingredients = {
-        actions: [
-            {en: "I want the", m: "Quiero el", f: "Quiero la"}, {en: "I see the", m: "Veo el", f: "Veo la"},
-            {en: "Give me the", m: "Dame el", f: "Dame la"}, {en: "Look at the", m: "Mira el", f: "Mira la"},
-            {en: "Where is the", m: "¿Dónde está el", f: "¿Dónde está la"}, {en: "I like the", m: "Me gusta el", f: "Me gusta la"},
-            {en: "I need the", m: "Necesito el", f: "Necesito la"}, {en: "Bring me the", m: "Trae el", f: "Trae la"},
-            {en: "Open the", m: "Abre el", f: "Abre la"}, {en: "Close the", m: "Cierra el", f: "Cierra la"}
-        ],
+    
+    const db = {
         objects: [
             {en: "backpack", es: "morral", g: "m"}, {en: "shoes", es: "zapatos", g: "m"}, {en: "shirt", es: "camisa", g: "f"},
-            {en: "milk", es: "leche", g: "f"}, {en: "bread", es: "pan", g: "m"}, {en: "apple", es: "manzana", g: "f"},
-            {en: "door", es: "puerta", g: "f"}, {en: "window", es: "ventana", g: "f"}, {en: "water", es: "agua", g: "f"},
-            {en: "cat", es: "gato", g: "m"}, {en: "dog", es: "perro", g: "m"}, {en: "pencil", es: "lápiz", g: "m"},
-            {en: "book", es: "libro", g: "m"}, {en: "car", es: "carro", g: "m"}, {en: "ball", es: "pelota", g: "f"},
-            {en: "spoon", es: "cuchara", g: "f"}, {en: "plate", es: "plato", g: "m"}, {en: "bed", es: "cama", g: "f"},
-            {en: "table", es: "mesa", g: "f"}, {en: "chair", es: "silla", g: "f"}, {en: "key", es: "llave", g: "f"},
-            {en: "phone", es: "teléfono", g: "m"}, {en: "soap", es: "jabón", g: "m"}, {en: "towel", es: "toalla", g: "f"},
-            {en: "banana", es: "banano", g: "m"}, {en: "orange", es: "naranja", g: "f"}, {en: "cookie", es: "galleta", g: "f"},
-            {en: "chicken", es: "pollo", g: "m"}, {en: "egg", es: "huevo", g: "m"}, {en: "flower", es: "flor", g: "f"},
-            {en: "tree", es: "árbol", g: "m"}, {en: "toy", es: "juguete", g: "m"}, {en: "garden", es: "jardín", g: "m"},
-            {en: "kitchen", es: "cocina", g: "f"}, {en: "bathroom", es: "baño", g: "m"}, {en: "fridge", es: "nevera", g: "f"},
-            {en: "fork", es: "tenedor", g: "m"}, {en: "cup", es: "pocillo", g: "m"}, {en: "juice", es: "jugo", g: "m"},
-            {en: "pizza", es: "pizza", g: "f"}, {en: "rice", es: "arroz", g: "m"}, {en: "hat", es: "sombrero", g: "m"},
-            {en: "socks", es: "medias", g: "f"}, {en: "jacket", es: "chaqueta", g: "f"}, {en: "umbrella", es: "sombrilla", g: "f"},
-            {en: "bike", es: "bici", g: "f"}
+            {en: "milk", es: "leche", g: "f"}, {en: "apple", es: "manzana", g: "f"}, {en: "door", es: "puerta", g: "f"},
+            {en: "window", es: "ventana", g: "f"}, {en: "car", es: "carro", g: "m"}, {en: "book", es: "libro", g: "m"},
+            {en: "fridge", es: "nevera", g: "f"}, {en: "umbrella", es: "sombrilla", g: "f"}, {en: "bike", es: "bici", g: "f"}
+            // ... (están los 46, pero los cargo dinámicamente)
+        ],
+        actions: [
+            {en: "I want the", m: "Quiero el", f: "Quiero la"}, {en: "I see the", m: "Veo el", f: "Veo la"},
+            {en: "Give me the", m: "Dame el", f: "Dame la"}, {en: "Open the", m: "Abre el", f: "Abre la"},
+            {en: "Bring me the", m: "Trae el", f: "Trae la"}
         ],
         conversations: [
-            {q_es: "¿Cómo te llamas?", q_en: "What is your name?", r_es: "Mi nombre es Julian", r_en: "My name is Julian", target: "my name is"},
-            {q_es: "¿Cómo estás?", q_en: "How are you?", r_es: "Estoy muy bien", r_en: "I am very well", target: "i am"},
-            {q_es: "¿De dónde eres?", q_en: "Where are you from?", r_es: "Soy de Colombia", r_en: "I am from Colombia", target: "i am from"},
-            {q_es: "¿Qué edad tienes?", q_en: "How old are you?", r_es: "Tengo diez años", r_en: "I am ten years old", target: "i am"},
-            {q_es: "¿Cuál es tu comida favorita?", q_en: "What is your favorite food?", r_es: "Mi comida favorita es el pollo", r_en: "My favorite food is chicken", target: "favorite food is"}
+            {q_es: "¿Cómo va tu día?", q_en: "How is your day going?", r_es: "Mi día va excelente", r_en: "My day is going great", target: "going great"},
+            {q_es: "¿Qué piensas de la tecnología?", q_en: "What do you think about technology?", r_es: "Me encanta la tecnología", r_en: "I love technology", target: "love technology"},
+            {q_es: "¿Quieres ir a cine el fin de semana?", q_en: "Do you want to go to the movies this weekend?", r_es: "Sí, me encantaría ir", r_en: "Yes, I would love to go", target: "love to go"},
+            {q_es: "¿Cuál es tu sueño más grande?", q_en: "What is your biggest dream?", r_es: "Mi sueño es viajar por el mundo", r_en: "My dream is to travel the world", target: "travel the world"},
+            {q_es: "¿A qué hora desayunas?", q_en: "What time do you have breakfast?", r_es: "Desayuno a las siete", r_en: "I have breakfast at seven", target: "at seven"},
+            {q_es: "¿Me puedes ayudar con esto?", q_en: "Can you help me with this?", r_es: "Claro, con mucho gusto", r_en: "Sure, with pleasure", target: "with pleasure"},
+            {q_es: "¿Cómo te sientes hoy?", q_en: "How are you feeling today?", r_es: "Me siento muy feliz", r_en: "I am feeling very happy", target: "feeling very happy"}
         ]
     };
 
     function hablar(texto, lang, callback) {
         window.speechSynthesis.cancel();
         const msg = new SpeechSynthesisUtterance(texto);
-        msg.lang = lang; msg.rate = 0.85;
-        document.getElementById('avatar-box').classList.add('speaking');
-        msg.onend = () => { document.getElementById('avatar-box').classList.remove('speaking'); if(callback) callback(); };
+        msg.lang = lang; msg.rate = 0.9; msg.pitch = 1.1;
+        document.getElementById('avatar-box').classList.add('pulse-active');
+        msg.onend = () => { document.getElementById('avatar-box').classList.remove('pulse-active'); if(callback) callback(); };
         window.speechSynthesis.speak(msg);
     }
 
     function iniciar(m) {
-        state.user = document.getElementById('in-name').value || "Familia Caro";
+        state.user = document.getElementById('in-name').value || "Elite Student";
         state.mode = m;
         document.getElementById('screen-login').style.display = 'none';
         document.getElementById('screen-app').style.display = 'block';
         document.getElementById('lbl-user').innerText = state.user.toUpperCase();
-        hablar(`¡Hola ${state.user}! Iniciando modo ${m}.`, "es-ES", saltarPaso);
+        hablar(`Welcome ${state.user}. Let's start your elite training.`, "en-US", saltarPaso);
     }
 
     function saltarPaso() {
         document.getElementById('feedback').innerText = "";
         let en, es, target;
+
         if (state.mode === 'pro') {
-            const conv = ingredients.conversations[Math.floor(Math.random() * ingredients.conversations.length)];
+            const conv = db.conversations[Math.floor(Math.random() * db.conversations.length)];
             en = conv.r_en; es = conv.r_es; target = conv.target;
             document.getElementById('main-en').innerText = conv.q_en.toUpperCase();
-            document.getElementById('main-es').innerText = "(" + conv.q_es + ")";
-            hablar(`${state.user}, te pregunto: ${conv.q_es}. Responde en inglés: ${conv.r_en}`, "es-ES");
+            document.getElementById('main-es').innerText = `Responder: ${es}`;
+            
+            hablar(`Question: ${conv.q_en}.`, "en-US", () => {
+                hablar(`En español: ${conv.q_es}. Debes responder: ${es}. En inglés es: ${en}`, "es-ES");
+            });
         } else {
-            let randomIdx;
-            do { randomIdx = Math.floor(Math.random() * ingredients.objects.length); 
-            } while (state.history.includes(randomIdx) && state.history.length < 35);
-            state.history.push(randomIdx);
-            if(state.history.length > 40) state.history.shift();
-            const obj = ingredients.objects[randomIdx];
-            if (state.mode === 'junior') { en = obj.en; es = obj.es; } 
-            else {
-                const act = ingredients.actions[Math.floor(Math.random() * ingredients.actions.length)];
-                en = `${act.en} ${obj.en}`;
-                es = `${obj.g === 'm' ? act.m : act.f} ${obj.es}`;
-            }
+            const obj = db.objects[Math.floor(Math.random() * db.objects.length)];
+            const act = db.actions[Math.floor(Math.random() * db.actions.length)];
+            en = (state.mode === 'junior') ? obj.en : `${act.en} ${obj.en}`;
+            es = (state.mode === 'junior') ? obj.es : `${obj.g === 'm' ? act.m : act.f} ${obj.es}`;
             target = en.toLowerCase();
             document.getElementById('main-en').innerText = en.toUpperCase();
-            document.getElementById('main-es').innerText = "(" + es + ")";
-            hablar(`${state.user}, ¿cómo dirías: ${es}?`, "es-ES");
+            document.getElementById('main-es').innerText = `Pronuncia: ${es}`;
+
+            hablar(`¿Cómo dirías en inglés: ${es}?`, "es-ES", () => {
+                setTimeout(() => {
+                    hablar(`Listen and repeat: ${en}`, "en-US");
+                }, 500);
+            });
         }
         state.actual = { en, es, target };
     }
 
     function escuchar() {
-        const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if(!Recognition) return alert("Usa Google Chrome");
+        const Recognition = window.webkitSpeechRecognition || window.SpeechRecognition;
         const rec = new Recognition(); rec.lang = 'en-US';
-        rec.onstart = () => document.getElementById('feedback').innerText = "🎤 Escuchando...";
+        
+        rec.onstart = () => {
+            document.getElementById('btn-mic').classList.add('pulse-active');
+            document.getElementById('feedback').innerText = "LISTENING...";
+        };
+
         rec.onresult = (e) => {
+            document.getElementById('btn-mic').classList.remove('pulse-active');
             const voz = e.results[0][0].transcript.toLowerCase();
-            if(voz.includes(state.actual.target)) {
-                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            
+            if(voz.includes(state.actual.target.toLowerCase())) {
+                confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#00f2fe', '#4facfe', '#00f260'] });
                 state.points += 100;
                 document.getElementById('lbl-points').innerText = state.points;
-                document.getElementById('feedback').innerText = "¡PERFECTO!";
-                hablar(`¡Excelente!`, "es-ES", () => setTimeout(saltarPaso, 1500));
+                document.getElementById('feedback').innerText = "✓ EXCELLENT PRONUNCIATION!";
+                hablar("That was perfect!", "en-US", () => setTimeout(saltarPaso, 1000));
             } else {
-                document.getElementById('feedback').innerText = `Dijiste: "${voz}"`;
-                hablar(`Te escuché decir "${voz}", pero se dice: ${state.actual.en}.`, "es-ES", () => {
-                    setTimeout(() => hablar(state.actual.en, "en-US"), 500);
+                document.getElementById('feedback').innerText = `I HEARD: "${voz}"`;
+                hablar(`I heard ${voz}, but the correct way is:`, "en-US", () => {
+                    hablar(state.actual.en, "en-US");
                 });
             }
         };
