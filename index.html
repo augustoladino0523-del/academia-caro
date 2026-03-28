@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="es"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Familia Caro - Academia Pro v12</title>
+    <title>Familia Caro - Academia Pro v13</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -21,9 +21,7 @@
         .txt-es { color: #94a3b8; font-size: 17px; margin-top: 8px; font-style: italic; display: block; }
         input { width: 85%; padding: 18px; border-radius: 15px; border: 2px solid var(--primary); margin-bottom: 25px; font-size: 18px; text-align: center; background: #1e293b; color: white; outline: none; }
         .stat-badge { background: #1e293b; padding: 8px 15px; border-radius: 10px; font-size: 13px; border: 1px solid #334155; }
-    </style></head><body>
-
-<div class="card">
+    </style></head><body><div class="card">
     <div id="screen-login">
         <h1 style="color:var(--primary); font-size: 35px; margin-bottom: 5px;">FAMILIA CARO</h1>
         <p style="margin-bottom:25px; font-size: 16px; color: #94a3b8;">Academia Profesional de Inglés</p>
@@ -46,14 +44,10 @@
         <div id="feedback" style="color:var(--gold); font-weight:bold; font-size: 14px; margin-bottom: 15px; min-height: 20px;"></div>
         <button class="btn btn-mic" id="btn-mic" onclick="escuchar()"><i class="fas fa-microphone"></i> TOCAR Y HABLAR</button>
         <button class="btn" style="background:#475569; font-size:11px; height: 40px;" onclick="saltarPaso()">SIGUIENTE PREGUNTA</button>
-    </div>
-</div>
-
-<script>
+    </div></div><script>
     let state = { user: "", points: 0, mode: "", actual: {}, history: [] };
 
     const db = {
-        // LISTA EXPANDIDA A 70 OBJETOS
         objects: [
             {en: "backpack", es: "morral", g: "m"}, {en: "shoes", es: "zapatos", g: "m"}, {en: "shirt", es: "camisa", g: "f"},
             {en: "milk", es: "leche", g: "f"}, {en: "bread", es: "pan", g: "m"}, {en: "apple", es: "manzana", g: "f"},
@@ -87,28 +81,27 @@
             {en: "I need the", m: "Necesito el", f: "Necesito la"}, {en: "Bring me the", m: "Trae el", f: "Trae la"},
             {en: "Open the", m: "Abre el", f: "Abre la"}, {en: "Close the", m: "Cierra el", f: "Cierra la"}
         ],
-        // LISTA EXPANDIDA A 20 CONVERSACIONES
         conversations: [
-            {q: "¿Cómo te llamas?", r_es: "Mi nombre es Julian", r_en: "My name is Julian", target: "my name is"},
-            {q: "¿Cómo estás?", r_es: "Estoy muy bien", r_en: "I am very well", target: "i am"},
-            {q: "¿De dónde eres?", r_es: "Soy de Colombia", r_en: "I am from Colombia", target: "i am from"},
-            {q: "¿Tienes hambre?", r_es: "Quiero una hamburguesa", r_en: "I want a hamburger", target: "hamburger"},
-            {q: "¿Dónde está tu maleta?", r_es: "Mi maleta es azul", r_en: "My suitcase is blue", target: "suitcase"},
-            {q: "¿Qué hora es?", r_es: "Son las diez", r_en: "It is ten o'clock", target: "ten"},
-            {q: "¿Me ayudas?", r_es: "Claro, con mucho gusto", r_en: "Sure, with pleasure", target: "pleasure"},
-            {q: "¿Te gusta el café?", r_es: "Me encanta el café", r_en: "I love coffee", target: "love coffee"},
-            {q: "¿Cómo está el clima?", r_es: "Está soleado hoy", r_en: "It is sunny today", target: "sunny"},
-            {q: "Mucho gusto", r_es: "Mucho gusto también", r_en: "Nice to meet you too", target: "nice to meet you too"},
-            {q: "¿Qué quieres comer?", r_es: "Quiero comer pizza", r_en: "I want to eat pizza", target: "eat pizza"},
-            {q: "¿A dónde vas?", r_es: "Voy a mi casa", r_en: "I am going to my house", target: "going to my house"},
-            {q: "¿Tienes mascotas?", r_es: "Sí, tengo un perro", r_en: "Yes, I have a dog", target: "have a dog"},
-            {q: "¿Cuál es tu color favorito?", r_es: "Mi color favorito es azul", r_en: "My favorite color is blue", target: "color is blue"},
-            {q: "¿Cómo te sientes?", r_es: "Me siento muy feliz", r_en: "I feel very happy", target: "feel very happy"},
-            {q: "¿Quieres jugar?", r_es: "Sí, quiero jugar contigo", r_en: "Yes, I want to play with you", target: "play with you"},
-            {q: "¿Dónde vives?", r_es: "Vivo en una ciudad grande", r_en: "I live in a big city", target: "live in a"},
-            {q: "¿Qué estás haciendo?", r_es: "Estoy estudiando inglés", r_en: "I am studying English", target: "studying english"},
-            {q: "¿Me puedes dar agua?", r_es: "Aquí tienes el agua", r_en: "Here is the water", target: "here is the water"},
-            {q: "¡Adiós, nos vemos!", r_es: "Hasta luego, cuídate", r_en: "See you later, take care", target: "see you later"}
+            {q_en: "What is your name?", q_es: "¿Cómo te llamas?", r_es: "Mi nombre es Julian", r_en: "My name is Julian", target: "my name is"},
+            {q_en: "How are you?", q_es: "¿Cómo estás?", r_es: "Estoy muy bien", r_en: "I am very well", target: "i am"},
+            {q_en: "Where are you from?", q_es: "¿De dónde eres?", r_es: "Soy de Colombia", r_en: "I am from Colombia", target: "i am from"},
+            {q_en: "Are you hungry?", q_es: "¿Tienes hambre?", r_es: "Quiero una hamburguesa", r_en: "I want a hamburger", target: "hamburger"},
+            {q_en: "What color is your suitcase?", q_es: "¿De qué color es tu maleta?", r_es: "Mi maleta es azul", r_en: "My suitcase is blue", target: "suitcase"},
+            {q_en: "What time is it?", q_es: "¿Qué hora es?", r_es: "Son las diez", r_en: "It is ten o'clock", target: "ten"},
+            {q_en: "Can you help me?", q_es: "¿Me ayudas?", r_es: "Claro, con mucho gusto", r_en: "Sure, with pleasure", target: "pleasure"},
+            {q_en: "Do you like coffee?", q_es: "¿Te gusta el café?", r_es: "Me encanta el café", r_en: "I love coffee", target: "love coffee"},
+            {q_en: "How is the weather today?", q_es: "¿Cómo está el clima?", r_es: "Está soleado hoy", r_en: "It is sunny today", target: "sunny"},
+            {q_en: "Nice to meet you!", q_es: "Mucho gusto", r_es: "Mucho gusto también", r_en: "Nice to meet you too", target: "nice to meet you too"},
+            {q_en: "What do you want to eat?", q_es: "¿Qué quieres comer?", r_es: "Quiero comer pizza", r_en: "I want to eat pizza", target: "eat pizza"},
+            {q_en: "Where are you going?", q_es: "¿A dónde vas?", r_es: "Voy a mi casa", r_en: "I am going to my house", target: "going to my house"},
+            {q_en: "Do you have pets?", q_es: "¿Tienes mascotas?", r_es: "Sí, tengo un perro", r_en: "Yes, I have a dog", target: "have a dog"},
+            {q_en: "What is your favorite color?", q_es: "¿Cuál es tu color favorito?", r_es: "Mi color favorito es azul", r_en: "My favorite color is blue", target: "color is blue"},
+            {q_en: "How do you feel?", q_es: "¿Cómo te sientes?", r_es: "Me siento muy feliz", r_en: "I feel very happy", target: "feel very happy"},
+            {q_en: "Do you want to play?", q_es: "¿Quieres jugar?", r_es: "Sí, quiero jugar contigo", r_en: "Yes, I want to play with you", target: "play with you"},
+            {q_en: "Where do you live?", q_es: "¿Dónde vives?", r_es: "Vivo en una ciudad grande", r_en: "I live in a big city", target: "live in a"},
+            {q_en: "What are you doing?", q_es: "¿Qué estás haciendo?", r_es: "Estoy estudiando inglés", r_en: "I am studying English", target: "studying english"},
+            {q_en: "Can I have some water?", q_es: "¿Me puedes dar agua?", r_es: "Aquí tienes el agua", r_en: "Here is the water", target: "here is the water"},
+            {q_en: "Goodbye, see you!", q_es: "¡Adiós, nos vemos!", r_es: "Hasta luego, cuídate", r_en: "See you later, take care", target: "see you later"}
         ]
     };
 
@@ -127,7 +120,7 @@
         document.getElementById('screen-login').style.display = 'none';
         document.getElementById('screen-app').style.display = 'block';
         document.getElementById('lbl-user').innerText = state.user.toUpperCase();
-        hablar(`¡Hola ${state.user}! Empecemos el modo ${m}. Yo te explico en español.`, "es-ES", saltarPaso);
+        hablar(`¡Hola ${state.user}! Empecemos el modo ${m}.`, "es-ES", saltarPaso);
     }
 
     function saltarPaso() {
@@ -137,10 +130,15 @@
         if (state.mode === 'pro') {
             const conv = db.conversations[Math.floor(Math.random() * db.conversations.length)];
             en = conv.r_en; es = conv.r_es; target = conv.target;
-            document.getElementById('main-en').innerText = conv.q.toUpperCase();
-            document.getElementById('main-es').innerText = `Responder: ${es}`;
-            hablar(`Te pregunto: ${conv.q}. Tú respondes: ${es}. En inglés se dice:`, "es-ES", () => {
-                hablar(en, "en-US");
+            document.getElementById('main-en').innerText = conv.q_en.toUpperCase();
+            document.getElementById('main-es').innerText = `(${conv.q_es}) / Responder: ${es}`;
+            
+            hablar(conv.q_en, "en-US", () => {
+                setTimeout(() => {
+                    hablar(`Te pregunté: ${conv.q_es}. Responde: ${es}. En inglés se dice:`, "es-ES", () => {
+                        hablar(en, "en-US");
+                    });
+                }, 500);
             });
         } else {
             let randomIdx;
@@ -175,14 +173,13 @@
                 state.points += 100;
                 document.getElementById('lbl-points').innerText = state.points;
                 document.getElementById('feedback').innerText = "✓ ¡PERFECTO!";
-                hablar("¡Excelente pronunciación!", "es-ES", () => setTimeout(saltarPaso, 1500));
+                hablar("¡Excelente!", "es-ES", () => setTimeout(saltarPaso, 1500));
             } else {
                 document.getElementById('feedback').innerText = `Dijiste: "${voz}"`;
-                hablar(`Escuché ${voz}, pero se dice: ${state.actual.en}.`, "es-ES", () => {
+                hablar(`Casi, pero se dice: ${state.actual.en}.`, "es-ES", () => {
                     hablar(state.actual.en, "en-US");
                 });
             }
         };
         rec.start();
-    }
-</script></body></html>
+    }</script></body></html>
