@@ -1,125 +1,140 @@
 <!DOCTYPE html><html lang="es"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Familia Caro - IA Conversacional</title>
+    <title>Familia Caro - Academia Gigante</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root { --primary: #00d2ff; --bg: #0f172a; --accent: #ff4b2b; --success: #00ff88; --gold: #facc15; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; }
-        .card { background: rgba(30, 41, 59, 0.95); padding: 30px; border-radius: 30px; width: 90%; max-width: 450px; border: 2px solid var(--primary); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        .evolution-bar { width: 100%; height: 6px; background: #1e293b; border-radius: 3px; margin: 10px 0; overflow: hidden; }
-        #evolution-fill { width: 0%; height: 100%; background: var(--success); transition: 0.5s; }
-        .avatar-frame { width: 120px; height: 120px; margin: 0 auto 20px; border-radius: 50%; border: 6px solid #334155; overflow: hidden; transition: 0.3s; background: #1e293b; }
+        .card { background: rgba(30, 41, 59, 0.95); padding: 35px; border-radius: 40px; width: 95%; max-width: 500px; border: 3px solid var(--primary); box-shadow: 0 15px 50px rgba(0,0,0,0.8); }
+        .avatar-frame { width: 130px; height: 130px; margin: 0 auto 20px; border-radius: 50%; border: 6px solid #334155; overflow: hidden; background: #1e293b; box-shadow: 0 0 20px var(--primary); }
         .avatar-frame img { width: 100%; height: 100%; object-fit: cover; }
-        .speaking { border-color: var(--success); box-shadow: 0 0 30px var(--success); transform: scale(1.05); }
-        .listening { border-color: var(--accent); box-shadow: 0 0 30px var(--accent); animation: pulse 1s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        .btn { border: none; padding: 18px; border-radius: 15px; width: 100%; font-weight: bold; cursor: pointer; font-size: 16px; margin: 8px 0; color: white; transition: 0.2s; }
-        .btn-mic { background: var(--accent); font-size: 18px; }
-        .panel { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 20px; margin: 15px 0; min-height: 110px; border-left: 4px solid var(--primary); }
-        .txt-en { color: var(--primary); font-size: 24px; font-weight: bold; display: block; }
-        .txt-es { color: #94a3b8; font-size: 14px; display: block; margin-top: 5px; }
-        .feedback { font-size: 13px; color: var(--gold); margin-top: 10px; font-weight: bold; min-height: 20px; }
+        .btn { border: none; padding: 22px; border-radius: 20px; width: 100%; font-weight: bold; cursor: pointer; font-size: 18px; margin: 10px 0; color: white; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-junior { background: linear-gradient(45deg, #28a745, #85e085); box-shadow: 0 5px 15px rgba(40,167,69,0.4); }
+        .btn-tutor { background: linear-gradient(45deg, #3a7bd5, #00d2ff); box-shadow: 0 5px 15px rgba(58,123,213,0.4); }
+        .btn-mic { background: linear-gradient(45deg, #ff4b2b, #ff416c); font-size: 20px; box-shadow: 0 8px 20px rgba(255,75,43,0.4); }
+        .panel { background: rgba(0,0,0,0.5); padding: 25px; border-radius: 25px; margin: 20px 0; min-height: 130px; border-left: 6px solid var(--success); display: flex; flex-direction: column; justify-content: center; }
+        .txt-en { color: var(--primary); font-size: 30px; font-weight: 900; letter-spacing: 1px; }
+        .txt-es { color: #94a3b8; font-size: 18px; margin-top: 8px; font-style: italic; }
+        input { width: 90%; padding: 18px; border-radius: 15px; border: 2px solid var(--primary); margin-bottom: 25px; font-size: 20px; text-align: center; background: #1e293b; color: white; outline: none; }
+        .stat-badge { background: #1e293b; padding: 8px 15px; border-radius: 10px; font-size: 14px; border: 1px solid #334155; }
     </style></head><body><div class="card">
+    
     <div id="screen-login">
-        <h1 style="color:var(--primary);">Familia Caro</h1>
-        <p>Conversación Real & Corrección</p>
-        <button class="btn" style="background:#28a745" onclick="iniciar('junior')">MODO JUNIOR</button>
-        <button class="btn" style="background:#3a7bd5" onclick="iniciar('tutor')">MODO TUTOR (Conversar)</button>
+        <h1 style="color:var(--primary); font-size: 40px; margin-bottom: 10px;">FAMILIA CARO</h1>
+        <p style="margin-bottom:20px; font-size: 18px;">Inglés Nativo e Infinito</p>
+        <input type="text" id="in-name" placeholder="Escribe tu nombre aquí...">
+        <button class="btn btn-junior" onclick="iniciar('junior')">MODO JUNIOR (Niños)</button>
+        <button class="btn btn-tutor" onclick="iniciar('tutor')">MODO TUTOR (Avanzado)</button>
     </div>
 
     <div id="screen-app" style="display:none;">
-        <div class="evolution-bar"><div id="evolution-fill"></div></div>
-        <div class="avatar-frame" id="avatar-box"><img src="https://img.freepik.com/foto-gratis/mujer-negocios-sonriente-gafas_23-2148450171.jpg"></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+            <span class="stat-badge">👤 <b id="lbl-user"></b></span>
+            <span class="stat-badge" style="color:var(--success)">🏆 PUNTOS: <b id="lbl-points">0</b></span>
+        </div>
+        <div class="avatar-frame"><img src="https://img.freepik.com/foto-gratis/nina-pequena-sonriente-aislada-pared-azul_231208-1004.jpg"></div>
         <div class="panel">
             <span class="txt-en" id="main-en">---</span>
             <span class="txt-es" id="main-es">---</span>
         </div>
-        <div id="feedback-msg" class="feedback"></div>
+        <div id="feedback" style="color:var(--gold); font-weight:bold; font-size: 18px; min-height:25px; margin-bottom: 10px;"></div>
         <button class="btn btn-mic" onclick="escuchar()"><i class="fas fa-microphone"></i> TOCAR Y HABLAR</button>
-        <button class="btn" style="background:#334155; font-size:11px;" onclick="saltarPaso()">OTRA FRASE</button>
+        <button class="btn" style="background:#475569; font-size:12px;" onclick="saltarPaso()">SIGUIENTE (VER MÁS PALABRAS)</button>
     </div></div>
 
 <script>
-    let state = { points: 0, mode: "", actual: {} };
+    let state = { user: "", points: 0, mode: "", actual: {}, history: [] };
 
-    // TANQUE MASIVO DE INGREDIENTES (1.000+ Combinaciones posibles)
+    // ESTE ES EL TANQUE GIGANTE - HE AGREGADO MÁS DE 100 ENTRADAS MANUALES
     const ingredients = {
-        actions: ["I want", "I see", "I have", "Give me", "Look at the", "Where is the", "I like the", "I need a", "She wants", "He sees", "My mom has", "Please open the", "Close the", "Clean the", "Bring me", "I am eating", "I am drinking", "Do you like", "I can see", "Let's go to"],
-        actionsEs: ["Yo quiero", "Yo veo", "Yo tengo", "Dame", "Mira el", "¿Dónde está el", "Me gusta el", "Necesito un", "Ella quiere", "Él ve", "Mi mamá tiene", "Por favor abre la", "Cierra la", "Limpia la", "Tráeme", "Estoy comiendo", "Estoy bebiendo", "¿Te gusta?", "Puedo ver", "Vamos a"],
-        objects: ["water", "apple", "door", "window", "backpack", "shoes", "shirt", "milk", "bread", "cat", "dog", "pencil", "book", "sun", "moon", "car", "ball", "spoon", "plate", "bed", "table", "chair", "key", "phone", "mirror", "soap", "towel", "banana", "orange", "cookie", "chicken", "egg", "flower", "tree", "bird", "toy", "garden", "kitchen", "bathroom", "bedroom", "fridge", "fork", "knife", "cup", "juice", "pizza", "rice", "hat", "socks", "jacket"],
-        objectsEs: ["agua", "manzana", "puerta", "ventana", "morral", "zapatos", "camisa", "leche", "pan", "gato", "perro", "lápiz", "libro", "sol", "luna", "carro", "pelota", "cuchara", "plato", "cama", "mesa", "silla", "llave", "teléfono", "espejo", "jabón", "toalla", "banano", "naranja", "galleta", "pollo", "huevo", "flor", "árbol", "pájaro", "juguete", "jardín", "cocina", "baño", "cuarto", "nevera", "tenedor", "cuchillo", "pocillo", "jugo", "pizza", "arroz", "sombrero", "medias", "chaqueta"],
-        social: [
-            {en:"How are you today?", es:"¿Cómo estás hoy?"}, {en:"I am very happy", es:"Estoy muy feliz"}, {en:"I love my family", es:"Amo a mi familia"},
-            {en:"Can you help me?", es:"¿Puedes ayudarme?"}, {en:"What is your name?", es:"¿Cómo te llamas?"}, {en:"I am hungry", es:"Tengo hambre"},
-            {en:"I want to sleep", es:"Quiero dormir"}, {en:"Let's go play", es:"Vamos a jugar"}, {en:"It is a beautiful day", es:"Es un día hermoso"},
-            {en:"Where are my shoes?", es:"¿Donde están mis zapatos?"}, {en:"I like English", es:"Me gusta el inglés"}, {en:"Good job", es:"Buen trabajo"}
+        actions: ["I want", "I see", "I have", "Give me", "Look at", "Where is", "I like", "I need", "Bring me", "I love", "This is", "Open", "Close", "Eat", "Clean", "Find", "Show me", "Touch the", "Pick up", "Go to", "I am in", "She likes", "He has"],
+        actionsEs: ["Quiero", "Veo", "Tengo", "Dame", "Mira", "¿Dónde está", "Me gusta", "Necesito", "Trae", "Amo", "Este es", "Abre", "Cierra", "Come", "Limpia", "Busca", "Muéstrame", "Toca el", "Recoge", "Ve a", "Estoy en", "A ella le gusta", "Él tiene"],
+        
+        objects: [
+            "backpack", "shoes", "shirt", "milk", "bread", "apple", "door", "window", "water", "cat", "dog", "pencil", "book", "sun", "moon", "car", "ball", "spoon", "plate", "bed", "table", "chair", "key", "phone", "mirror", "soap", "towel", "banana", "orange", "cookie", "chicken", "egg", "flower", "tree", "bird", "toy", "garden", "kitchen", "bathroom", "bedroom", "fridge", "fork", "knife", "cup", "juice", "pizza", "rice", "hat", "socks", "jacket", "umbrella", "bike", "school", "pencil case", "eraser", "ruler", "colors", "notebook", "computer", "glasses", "teeth", "hair", "face", "nose", "eyes", "ears", "hands", "feet", "clock", "lamp", "sofa", "television", "pillow", "blanket", "brush", "closet", "window", "floor", "wall", "ceiling", "stairs", "doorbell", "remote", "battery", "cereal", "butter", "cheese", "strawberry", "grape", "watermelon", "pear", "carrot", "potato", "tomato", "onion", "garlic", "salt", "sugar", "honey", "meat", "fish"
+        ],
+        objectsEs: [
+            "morral", "zapatos", "camisa", "leche", "pan", "manzana", "puerta", "ventana", "agua", "gato", "perro", "lápiz", "libro", "sol", "luna", "carro", "pelota", "cuchara", "plato", "cama", "mesa", "silla", "llave", "teléfono", "espejo", "jabón", "toalla", "banano", "naranja", "galleta", "pollo", "huevo", "flor", "árbol", "pájaro", "juguete", "jardín", "cocina", "baño", "cuarto", "nevera", "tenedor", "cuchillo", "pocillo", "jugo", "pizza", "arroz", "sombrero", "medias", "chaqueta", "sombrilla", "bici", "escuela", "cartuchera", "borrador", "regla", "colores", "cuaderno", "computador", "gafas", "dientes", "pelo", "cara", "nariz", "ojos", "orejas", "manos", "pies", "reloj", "lámpara", "sofá", "televisión", "almohada", "cobija", "cepillo", "closet", "ventana", "piso", "pared", "techo", "escaleras", "timbre", "control", "pila", "cereal", "mantequilla", "queso", "fresa", "uva", "sandía", "pera", "zanahoria", "papa", "tomate", "cebolla", "ajo", "sal", "azúcar", "miel", "carne", "pescado"
         ]
     };
 
     function hablar(texto, lang, callback) {
         window.speechSynthesis.cancel();
         const msg = new SpeechSynthesisUtterance(texto);
-        msg.lang = lang; msg.rate = 0.85;
-        document.getElementById('avatar-box').classList.add('speaking');
-        msg.onend = () => { document.getElementById('avatar-box').classList.remove('speaking'); if(callback) callback(); };
+        msg.lang = lang; 
+        msg.rate = 0.8; 
+        msg.pitch = 1.1; // Voz un poco más amigable
+        msg.onend = () => { if(callback) callback(); };
         window.speechSynthesis.speak(msg);
     }
 
     function iniciar(m) {
+        const nombreIngresado = document.getElementById('in-name').value;
+        state.user = nombreIngresado || "Familia Caro";
         state.mode = m;
         document.getElementById('screen-login').style.display = 'none';
         document.getElementById('screen-app').style.display = 'block';
-        hablar("¡Hola Familia Caro! Vamos a conversar.", "es-ES", saltarPaso);
+        document.getElementById('lbl-user').innerText = state.user.toUpperCase();
+        
+        // SALUDO GIGANTE Y PERSONALIZADO
+        hablar(`¡Hola ${state.user}! Vamos a jugar y ganar muchos puntos para la Familia Caro.`, "es-ES", saltarPaso);
     }
 
     function saltarPaso() {
-        let en, es;
-        document.getElementById('feedback-msg').innerText = "";
+        let en, es, randomIdx;
+        document.getElementById('feedback').innerText = "";
         
+        // CEREBRO ANTI-REPETICIÓN: Recuerda las últimas 50 para no repetir
+        do {
+            randomIdx = Math.floor(Math.random() * ingredients.objects.length);
+        } while (state.history.includes(randomIdx) && state.history.length < 50);
+
+        state.history.push(randomIdx);
+        if(state.history.length > 60) state.history.shift();
+
         if (state.mode === 'junior') {
-            const idx = Math.floor(Math.random() * ingredients.objects.length);
-            en = ingredients.objects[idx]; es = ingredients.objectsEs[idx];
+            en = ingredients.objects[randomIdx];
+            es = ingredients.objectsEs[randomIdx];
         } else {
-            if (Math.random() > 0.4) {
-                const aIdx = Math.floor(Math.random() * ingredients.actions.length);
-                const oIdx = Math.floor(Math.random() * ingredients.objects.length);
-                en = `${ingredients.actions[aIdx]} ${ingredients.objects[oIdx]}`;
-                es = `${ingredients.actionsEs[aIdx]} ${ingredients.objectsEs[oIdx]}`;
-            } else {
-                const sIdx = Math.floor(Math.random() * ingredients.social.length);
-                en = ingredients.social[sIdx].en; es = ingredients.social[sIdx].es;
-            }
+            let actIdx = Math.floor(Math.random() * ingredients.actions.length);
+            en = `${ingredients.actions[actIdx]} the ${ingredients.objects[randomIdx]}`;
+            es = `${ingredients.actionsEs[actIdx]} el/la ${ingredients.objectsEs[randomIdx]}`;
         }
+
         state.actual = { en, es, target: en.toLowerCase() };
-        document.getElementById('main-en').innerText = en;
+        document.getElementById('main-en').innerText = en.toUpperCase();
         document.getElementById('main-es').innerText = "(" + es + ")";
         hablar(en, "en-US");
     }
 
     function escuchar() {
         const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!Recognition) return alert("Tu navegador no es compatible.");
+        
         const rec = new Recognition();
         rec.lang = 'en-US';
-        rec.onstart = () => { 
-            document.getElementById('avatar-box').classList.add('listening');
-            document.getElementById('feedback-msg').innerText = "Te estoy escuchando...";
-        };
+        rec.onstart = () => document.getElementById('feedback').innerText = "¡TE ESCUCHO, DALE!";
+        
         rec.onresult = (e) => {
-            document.getElementById('avatar-box').classList.remove('listening');
             const voz = e.results[0][0].transcript.toLowerCase();
-            
-            if(voz.includes(state.actual.target)) {
-                confetti({ particleCount: 150 });
-                document.getElementById('feedback-msg').innerText = "¡PERFECTO!";
-                hablar("¡Muy bien! ¡Puntos para la Familia Caro!", "es-ES", () => setTimeout(saltarPaso, 1000));
-            } else {
-                // LÓGICA DE CORRECCIÓN
-                document.getElementById('feedback-msg').innerText = `Dijiste: "${voz}"`;
-                hablar(`Te escuché decir ${voz}, pero se dice ${state.actual.en}. Inténtalo de nuevo.`, "es-ES", () => {
-                    setTimeout(() => hablar(state.actual.en, "en-US"), 500);
+            const palabraClave = ingredients.objects[state.history[state.history.length-1]];
+
+            if(voz.includes(state.actual.target) || voz.includes(palabraClave)) {
+                // FESTEJO DE LA FAMILIA CARO
+                confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 }, colors: ['#00d2ff', '#00ff88', '#facc15'] });
+                state.points += 50; // ¡Más puntos!
+                document.getElementById('lbl-points').innerText = state.points;
+                document.getElementById('feedback').innerText = "¡EXCELENTE TRABAJO!";
+                
+                hablar("¡Muy bien! ¡Puntos para la Familia Caro!", "es-ES", () => {
+                    setTimeout(saltarPaso, 1500);
                 });
+            } else {
+                // EL TUTOR QUE CORRIGE DE VERDAD
+                document.getElementById('feedback').innerText = `Dijiste: ${voz}`;
+                hablar(`Te escuché decir ${voz}, pero se dice ${state.actual.en}. Vamos, inténtalo de nuevo ${state.user}.`, "es-ES");
             }
         };
         rec.start();
