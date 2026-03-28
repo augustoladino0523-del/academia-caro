@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="es"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Familia Caro - Tutor Fluido</title>
+    <title>Familia Caro - Tutor Inteligente</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -24,8 +24,8 @@
     
     <div id="screen-login">
         <h1 style="color:var(--primary); font-size: 40px; margin-bottom: 10px;">FAMILIA CARO</h1>
-        <p style="margin-bottom:20px; font-size: 18px;">Tutoría Conversacional</p>
-        <input type="text" id="in-name" placeholder="Tu nombre...">
+        <p style="margin-bottom:20px; font-size: 18px;">Inglés Natural y Fluido</p>
+        <input type="text" id="in-name" placeholder="Escribe tu nombre...">
         <button class="btn btn-junior" onclick="iniciar('junior')">MODO JUNIOR</button>
         <button class="btn btn-tutor" onclick="iniciar('tutor')">MODO TUTOR</button>
     </div>
@@ -49,17 +49,50 @@
     let state = { user: "", points: 0, mode: "", actual: {}, history: [] };
 
     const ingredients = {
-        actions: ["I want", "I see", "I have", "Give me", "Look at", "Where is", "I like", "I need", "Bring me", "I love", "This is", "Open", "Close", "Eat", "Clean", "Find"],
-        actionsEs: ["Quiero", "Veo", "Tengo", "Dame", "Mira", "¿Dónde está", "Me gusta", "Necesito", "Trae", "Amo", "Este es", "Abre", "Cierra", "Come", "Limpia", "Busca"],
-        objects: ["backpack", "shoes", "shirt", "milk", "bread", "apple", "door", "window", "water", "cat", "dog", "pencil", "book", "sun", "moon", "car", "ball", "spoon", "plate", "bed", "table", "chair", "key", "phone", "mirror", "soap", "towel", "banana", "orange", "cookie", "chicken", "egg", "flower", "tree", "bird", "toy", "garden", "kitchen", "bathroom", "bedroom", "fridge", "fork", "knife", "cup", "juice", "pizza", "rice", "hat", "socks", "jacket", "umbrella", "bike", "school", "notebook", "computer", "glasses", "clock", "lamp", "sofa", "television", "pillow", "blanket", "brush"],
-        objectsEs: ["morral", "zapatos", "camisa", "leche", "pan", "manzana", "puerta", "ventana", "agua", "gato", "perro", "lápiz", "libro", "sol", "luna", "carro", "pelota", "cuchara", "plato", "cama", "mesa", "silla", "llave", "teléfono", "espejo", "jabón", "toalla", "banano", "naranja", "galleta", "pollo", "huevo", "flor", "árbol", "pájaro", "juguete", "jardín", "cocina", "baño", "cuarto", "nevera", "tenedor", "cuchillo", "pocillo", "jugo", "pizza", "arroz", "sombrero", "medias", "chaqueta", "sombrilla", "bici", "escuela", "cuaderno", "computador", "gafas", "reloj", "lámpara", "sofá", "televisión", "almohada", "cobija", "cepillo"]
+        actions: [
+            {en: "I want the", m: "Quiero el", f: "Quiero la"},
+            {en: "I see the", m: "Veo el", f: "Veo la"},
+            {en: "Give me the", m: "Dame el", f: "Dame la"},
+            {en: "Look at the", m: "Mira el", f: "Mira la"},
+            {en: "Where is the", m: "¿Dónde está el", f: "¿Dónde está la"},
+            {en: "I like the", m: "Me gusta el", f: "Me gusta la"},
+            {en: "I need the", m: "Necesito el", f: "Necesito la"},
+            {en: "Bring me the", m: "Trae el", f: "Trae la"},
+            {en: "Open the", m: "Abre el", f: "Abre la"},
+            {en: "Close the", m: "Cierra el", f: "Cierra la"}
+        ],
+        // g: 'm' para masculino, 'f' para femenino
+        objects: [
+            {en: "backpack", es: "morral", g: "m"}, {en: "shoes", es: "zapatos", g: "m"},
+            {en: "shirt", es: "camisa", g: "f"}, {en: "milk", es: "leche", g: "f"},
+            {en: "bread", es: "pan", g: "m"}, {en: "apple", es: "manzana", g: "f"},
+            {en: "door", es: "puerta", g: "f"}, {en: "window", es: "ventana", g: "f"},
+            {en: "water", es: "agua", g: "f"}, {en: "cat", es: "gato", g: "m"},
+            {en: "dog", es: "perro", g: "m"}, {en: "pencil", es: "lápiz", g: "m"},
+            {en: "book", es: "libro", g: "m"}, {en: "car", es: "carro", g: "m"},
+            {en: "ball", es: "pelota", g: "f"}, {en: "spoon", es: "cuchara", g: "f"},
+            {en: "plate", es: "plato", g: "m"}, {en: "bed", es: "cama", g: "f"},
+            {en: "table", es: "mesa", g: "f"}, {en: "chair", es: "silla", g: "f"},
+            {en: "key", es: "llave", g: "f"}, {en: "phone", es: "teléfono", g: "m"},
+            {en: "soap", es: "jabón", g: "m"}, {en: "towel", es: "toalla", g: "f"},
+            {en: "banana", es: "banano", g: "m"}, {en: "orange", es: "naranja", g: "f"},
+            {en: "cookie", es: "galleta", g: "f"}, {en: "chicken", es: "pollo", g: "m"},
+            {en: "egg", es: "huevo", g: "m"}, {en: "flower", es: "flor", g: "f"},
+            {en: "tree", es: "árbol", g: "m"}, {en: "toy", es: "juguete", g: "m"},
+            {en: "garden", es: "jardín", g: "m"}, {en: "kitchen", es: "cocina", g: "f"},
+            {en: "bathroom", es: "baño", g: "m"}, {en: "fridge", es: "nevera", g: "f"},
+            {en: "fork", es: "tenedor", g: "m"}, {en: "cup", es: "pocillo", g: "m"},
+            {en: "juice", es: "jugo", g: "m"}, {en: "pizza", es: "pizza", g: "f"},
+            {en: "rice", es: "arroz", g: "m"}, {en: "hat", es: "sombrero", g: "m"},
+            {en: "socks", es: "medias", g: "f"}, {en: "jacket", es: "chaqueta", g: "f"},
+            {en: "umbrella", es: "sombrilla", g: "f"}, {en: "bike", es: "bici", g: "f"}
+        ]
     };
 
     function hablar(texto, lang, callback) {
         window.speechSynthesis.cancel();
         const msg = new SpeechSynthesisUtterance(texto);
-        msg.lang = lang; 
-        msg.rate = 0.85;
+        msg.lang = lang; msg.rate = 0.85;
         document.getElementById('avatar-box').classList.add('speaking');
         msg.onend = () => { 
             document.getElementById('avatar-box').classList.remove('speaking');
@@ -74,8 +107,7 @@
         document.getElementById('screen-login').style.display = 'none';
         document.getElementById('screen-app').style.display = 'block';
         document.getElementById('lbl-user').innerText = state.user.toUpperCase();
-        
-        hablar(`¡Hola ${state.user}! Soy tu tutor. Vamos a conversar un poco.`, "es-ES", saltarPaso);
+        hablar(`¡Hola ${state.user}! Soy tu tutor. Vamos a aprender inglés de verdad.`, "es-ES", saltarPaso);
     }
 
     function saltarPaso() {
@@ -84,28 +116,31 @@
         
         do {
             randomIdx = Math.floor(Math.random() * ingredients.objects.length);
-        } while (state.history.includes(randomIdx) && state.history.length < 40);
+        } while (state.history.includes(randomIdx) && state.history.length < 30);
 
         state.history.push(randomIdx);
-        if(state.history.length > 50) state.history.shift();
+        if(state.history.length > 40) state.history.shift();
+
+        const obj = ingredients.objects[randomIdx];
 
         if (state.mode === 'junior') {
-            en = ingredients.objects[randomIdx];
-            es = ingredients.objectsEs[randomIdx];
+            en = obj.en;
+            es = obj.es;
         } else {
             let actIdx = Math.floor(Math.random() * ingredients.actions.length);
-            en = `${ingredients.actions[actIdx]} the ${ingredients.objects[randomIdx]}`;
-            es = `${ingredients.actionsEs[actIdx]} el/la ${ingredients.objectsEs[randomIdx]}`;
+            const act = ingredients.actions[actIdx];
+            en = `${act.en} ${obj.en}`;
+            // AQUÍ ESTÁ LA MAGIA: Elige el o la según el objeto
+            es = `${obj.g === 'm' ? act.m : act.f} ${obj.es}`;
         }
 
         state.actual = { en, es, target: en.toLowerCase() };
         document.getElementById('main-en').innerText = en.toUpperCase();
         document.getElementById('main-es').innerText = "(" + es + ")";
 
-        // INTERACCIÓN MÁS HUMANA: El tutor introduce la palabra
-        const intro = state.mode === 'junior' ? `¿Cómo dirías ${es}?` : `Ahora intenta decir: ${es}`;
-        hablar(intro, "es-ES", () => {
-            setTimeout(() => hablar(en, "en-US"), 500);
+        // INTRODUCCIÓN CON EL NOMBRE DEL USUARIO
+        hablar(`${state.user}, ¿cómo dirías en inglés: ${es}?`, "es-ES", () => {
+            setTimeout(() => hablar(en, "en-US"), 600);
         });
     }
 
@@ -117,22 +152,20 @@
         
         rec.onresult = (e) => {
             const voz = e.results[0][0].transcript.toLowerCase();
-            const esCorrecto = voz.includes(state.actual.target) || voz.includes(ingredients.objects[state.history[state.history.length-1]]);
+            const esCorrecto = voz.includes(state.actual.target) || voz.includes(ingredients.objects[state.history[state.history.length-1]].en);
 
             if(esCorrecto) {
                 confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
                 state.points += 50;
                 document.getElementById('lbl-points').innerText = state.points;
-                document.getElementById('feedback').innerText = "¡EXCELENTE!";
+                document.getElementById('feedback').innerText = "¡ASÍ SE HACE!";
                 
-                // Feedback conversacional
-                hablar(`¡Increíble ${state.user}! Lo dijiste perfecto. ¡Puntos para la Familia Caro!`, "es-ES", () => {
+                hablar(`¡Perfecto ${state.user}! ¡Puntos para la familia!`, "es-ES", () => {
                     setTimeout(saltarPaso, 1500);
                 });
             } else {
-                document.getElementById('feedback').innerText = `Dijiste: ${voz}`;
-                // CORRECCIÓN FLUIDA
-                hablar(`Escuché algo como ${voz}, pero para decir ${state.actual.es} usamos ${state.actual.en}. Inténtalo de nuevo, tú puedes.`, "es-ES");
+                document.getElementById('feedback').innerText = `Escuché: ${voz}`;
+                hablar(`Te escuché decir ${voz}, pero se dice ${state.actual.en}. Inténtalo de nuevo.`, "es-ES");
             }
         };
         rec.start();
