@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="es"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Familia Caro - Academia Pro v11</title>
+    <title>Familia Caro - Academia Pro v12</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -53,7 +53,7 @@
     let state = { user: "", points: 0, mode: "", actual: {}, history: [] };
 
     const db = {
-        // AQUÍ ESTÁN TUS 46 OBJETOS - VERIFICADO UNO POR UNO
+        // LISTA EXPANDIDA A 70 OBJETOS
         objects: [
             {en: "backpack", es: "morral", g: "m"}, {en: "shoes", es: "zapatos", g: "m"}, {en: "shirt", es: "camisa", g: "f"},
             {en: "milk", es: "leche", g: "f"}, {en: "bread", es: "pan", g: "m"}, {en: "apple", es: "manzana", g: "f"},
@@ -70,9 +70,16 @@
             {en: "fork", es: "tenedor", g: "m"}, {en: "cup", es: "pocillo", g: "m"}, {en: "juice", es: "jugo", g: "m"},
             {en: "pizza", es: "pizza", g: "f"}, {en: "rice", es: "arroz", g: "m"}, {en: "hat", es: "sombrero", g: "m"},
             {en: "socks", es: "medias", g: "f"}, {en: "jacket", es: "chaqueta", g: "f"}, {en: "umbrella", es: "sombrilla", g: "f"},
-            {en: "bike", es: "bici", g: "f"}
+            {en: "bike", es: "bici", g: "f"}, {en: "lion", es: "león", g: "m"}, {en: "elephant", es: "elefante", g: "m"},
+            {en: "monkey", es: "mono", g: "m"}, {en: "cow", es: "vaca", g: "f"}, {en: "pig", es: "cerdo", g: "m"},
+            {en: "sun", es: "sol", g: "m"}, {en: "moon", es: "luna", g: "f"}, {en: "star", es: "estrella", g: "f"},
+            {en: "computer", es: "computador", g: "m"}, {en: "guitar", es: "guitarra", g: "f"}, {en: "plane", es: "avión", g: "m"},
+            {en: "train", es: "tren", g: "m"}, {en: "ship", es: "barco", g: "m"}, {en: "house", es: "casa", g: "f"},
+            {en: "school", es: "escuela", g: "f"}, {en: "park", es: "parque", g: "m"}, {en: "beach", es: "playa", g: "f"},
+            {en: "mountain", es: "montaña", g: "f"}, {en: "street", es: "calle", g: "f"}, {en: "watch", es: "reloj", g: "m"},
+            {en: "wallet", es: "billetera", g: "f"}, {en: "ring", es: "anillo", g: "m"}, {en: "glasses", es: "gafas", g: "f"},
+            {en: "mirror", es: "espejo", g: "m"}
         ],
-        // AQUÍ ESTÁN TUS 10 ACCIONES
         actions: [
             {en: "I want the", m: "Quiero el", f: "Quiero la"}, {en: "I see the", m: "Veo el", f: "Veo la"},
             {en: "Give me the", m: "Dame el", f: "Dame la"}, {en: "Look at the", m: "Mira el", f: "Mira la"},
@@ -80,6 +87,7 @@
             {en: "I need the", m: "Necesito el", f: "Necesito la"}, {en: "Bring me the", m: "Trae el", f: "Trae la"},
             {en: "Open the", m: "Abre el", f: "Abre la"}, {en: "Close the", m: "Cierra el", f: "Cierra la"}
         ],
+        // LISTA EXPANDIDA A 20 CONVERSACIONES
         conversations: [
             {q: "¿Cómo te llamas?", r_es: "Mi nombre es Julian", r_en: "My name is Julian", target: "my name is"},
             {q: "¿Cómo estás?", r_es: "Estoy muy bien", r_en: "I am very well", target: "i am"},
@@ -90,7 +98,17 @@
             {q: "¿Me ayudas?", r_es: "Claro, con mucho gusto", r_en: "Sure, with pleasure", target: "pleasure"},
             {q: "¿Te gusta el café?", r_es: "Me encanta el café", r_en: "I love coffee", target: "love coffee"},
             {q: "¿Cómo está el clima?", r_es: "Está soleado hoy", r_en: "It is sunny today", target: "sunny"},
-            {q: "Mucho gusto", r_es: "Mucho gusto también", r_en: "Nice to meet you too", target: "nice to meet you too"}
+            {q: "Mucho gusto", r_es: "Mucho gusto también", r_en: "Nice to meet you too", target: "nice to meet you too"},
+            {q: "¿Qué quieres comer?", r_es: "Quiero comer pizza", r_en: "I want to eat pizza", target: "eat pizza"},
+            {q: "¿A dónde vas?", r_es: "Voy a mi casa", r_en: "I am going to my house", target: "going to my house"},
+            {q: "¿Tienes mascotas?", r_es: "Sí, tengo un perro", r_en: "Yes, I have a dog", target: "have a dog"},
+            {q: "¿Cuál es tu color favorito?", r_es: "Mi color favorito es azul", r_en: "My favorite color is blue", target: "color is blue"},
+            {q: "¿Cómo te sientes?", r_es: "Me siento muy feliz", r_en: "I feel very happy", target: "feel very happy"},
+            {q: "¿Quieres jugar?", r_es: "Sí, quiero jugar contigo", r_en: "Yes, I want to play with you", target: "play with you"},
+            {q: "¿Dónde vives?", r_es: "Vivo en una ciudad grande", r_en: "I live in a big city", target: "live in a"},
+            {q: "¿Qué estás haciendo?", r_es: "Estoy estudiando inglés", r_en: "I am studying English", target: "studying english"},
+            {q: "¿Me puedes dar agua?", r_es: "Aquí tienes el agua", r_en: "Here is the water", target: "here is the water"},
+            {q: "¡Adiós, nos vemos!", r_es: "Hasta luego, cuídate", r_en: "See you later, take care", target: "see you later"}
         ]
     };
 
@@ -127,9 +145,9 @@
         } else {
             let randomIdx;
             do { randomIdx = Math.floor(Math.random() * db.objects.length); 
-            } while (state.history.includes(randomIdx) && state.history.length < 40);
+            } while (state.history.includes(randomIdx) && state.history.length < 50);
             state.history.push(randomIdx);
-            if(state.history.length > 40) state.history.shift();
+            if(state.history.length > 50) state.history.shift();
 
             const obj = db.objects[randomIdx];
             const act = db.actions[Math.floor(Math.random() * db.actions.length)];
